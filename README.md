@@ -12,7 +12,7 @@ A FTP client...  &emsp;&emsp;//TODO
 * Vikram Guhilot
 
 ## Links
-* [GitHub Page](https://psu-agile-group.github.io/)
+* [GitHub Page](https://psu-agile-group.github.io/FTP-Client/)
 * [Repository](https://github.com/psu-agile-group)
 * [Backlog](https://github.com/psu-agile-group/psu-agile-group.github.io/blob/master/BACKLOG.md)
 
