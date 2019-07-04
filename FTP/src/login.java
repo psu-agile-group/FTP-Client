@@ -29,7 +29,7 @@ public class login {
                 continue;
 
             }else if(lineSplit[0].equals("ls")) {
-                list_directories_fromServer(ftpClient);
+                list_files_fromServer(ftpClient);
 
             }else if(lineSplit[0].equals("cd")) {
                 //TODO
@@ -51,7 +51,7 @@ public class login {
         }
     }
 
-    private static void list_directories_fromServer(FTPClient ftpClient){
+    private static void list_files_fromServer(FTPClient ftpClient){
         ftpClient.enterLocalPassiveMode();
         try{
             FTPFile[] listFiles = ftpClient.listFiles();
