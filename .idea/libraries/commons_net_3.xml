@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="commons-net-3">
+    <CLASSES>
+      <root url="file://C:/Program Files/Java/jdk-12.0.1/jmods/commons-net-3.6" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="file://C:/Program Files/Java/jdk-12.0.1/jmods/commons-net-3.6/apidocs" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="file://C:/Program Files/Java/jdk-12.0.1/jmods/commons-net-3.6" />
+    </SOURCES>
+    <jarDirectory url="file://C:/Program Files/Java/jdk-12.0.1/jmods/commons-net-3.6" recursive="false" />
+    <jarDirectory url="file://C:/Program Files/Java/jdk-12.0.1/jmods/commons-net-3.6" recursive="false" type="SOURCES" />
+  </library>
+</component>
