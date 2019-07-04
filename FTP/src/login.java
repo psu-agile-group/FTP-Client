@@ -33,35 +33,42 @@ public class login {
 
             }else if(lineSplit[0].equals("cd")) {
                 //TODO
-                /*String newCommand = "";
-                for (String line : lineSplit) {
-                    newCommand += line;
-                }*/
-                cd_directories_fromServer(ftpClient, lineSplit[1]);
+                cd_directories_fromServer(ftpClient, command);
 
             }else if(command.equalsIgnoreCase("exit")||command.equalsIgnoreCase("quit"))  {
                 System.out.println("Goodbye");
                 System.exit(0);
-             }
+            }else if(lineSplit[0].equalsIgnoreCase("help")) {
+                //TODO
+                System.out.println("ls\t\tDisplays directories and files in the current directory.\n" +
+                        "cd\t\tChanges the current directory.\n" +
+                        "exit\tExit FTP Shell.");
+
+            }else {
+                System.out.println("[" + lineSplit[0] + "] is not recognized as an internal or external command");
+            }
+
         }
     }
 
     private static void list_directories_fromServer(FTPClient ftpClient){
         ftpClient.enterLocalPassiveMode();
         try{
-            FTPFile[] listDirectories = ftpClient.listDirectories();
-            if (listDirectories != null) {
-                for (FTPFile file : listDirectories) {
-                    System.out.print(file.getName()+'\t');
+            FTPFile[] listFiles = ftpClient.listFiles();
+            if (listFiles != null) {
+                for (FTPFile file : listFiles) {
+                    System.out.print(file.getName() + '\t');
                 }
             }
         }catch (IOException e) {
             System.out.println("Oops! Something wrong happened: " + e);
         }
+        System.out.println();
     }
 
     private static void cd_directories_fromServer(FTPClient ftpClient, String lineSplit){
         //TODO
+        System.out.println(lineSplit);
     }
 
     public static void main(String[] args) {
