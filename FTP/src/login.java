@@ -28,6 +28,15 @@ public class login {
             if (command.equals("")) {
                 continue;
 
+            }else if(lineSplit[0].equals("get")) {
+                if (lineSplit.length < 2) {
+                    //print_usage("get");
+                    System.out.println("need remote file name!");
+                    continue;
+                }
+
+                get_file_fromServer(ftpClient, lineSplit[1]);
+
             }else if(lineSplit[0].equals("ls")) {
                 list_files_fromServer(ftpClient);
 
@@ -69,6 +78,31 @@ public class login {
     private static void cd_directories_fromServer(FTPClient ftpClient, String lineSplit){
         //TODO
         System.out.println(lineSplit);
+    }
+
+    private static void get_file_fromServer(FTPClient ftpClient, String remotePath){
+        ftpClient.enterLocalPassiveMode();
+        try{
+            String[] names = ftpClient.listNames(remotePath);
+            if (names.length == 1) { //check file exists
+
+                // use same name for local file name
+                String localPath = remotePath;
+                int index = localPath.lastIndexOf('/');
+                if (index != -1) {
+                    localPath = localPath.substring(index + 1);
+                }
+
+                OutputStream local = new FileOutputStream(localPath);
+                ftpClient.retrieveFile(remotePath, local);
+                local.close();
+                System.out.print("saved to " + localPath);
+            } else {
+                System.out.print("\"" + remotePath + "\"" + " does not exist.");
+            }
+        }catch (IOException e) {
+            System.out.println("Oops! Something wrong happened: " + e);
+        }
     }
 
     public static void main(String[] args) {
