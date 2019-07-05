@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -21,23 +22,35 @@ public class login {
         String command;
 
         while (true) {
-            System.out.print("\nFTP Shell >> ");
+            System.out.print("FTP Shell>> ");
             command = console.readLine();
             String[] lineSplit = command.split(" ");
 
             if (command.equals("")) {
                 continue;
 
-            }else if(lineSplit[0].equals("ls")) {
-                list_files_fromServer(ftpClient);
+            }else if(lineSplit[0].equals("rls")) {
+                if(lineSplit.length==1) {
+                    list_files_fromServer(ftpClient, "");
+                } else {
+                    for(int i=1; i<lineSplit.length;++i){
+                        list_files_fromServer(ftpClient, lineSplit[i]);
+                    }
+                }
 
-            }else if(lineSplit[0].equals("cd")) {
-                //TODO
-                cd_directories_fromServer(ftpClient, command);
+            }else if(lineSplit[0].equals("ls")) {
+                if(lineSplit.length==1) {
+                    list_files_fromLocal("");
+                } else {
+                    for(int i=1; i<lineSplit.length;++i) {
+                        list_files_fromLocal(lineSplit[i]);
+                    }
+                }
 
             }else if(command.equalsIgnoreCase("exit")||command.equalsIgnoreCase("quit"))  {
                 System.out.println("Goodbye");
                 System.exit(0);
+
             }else if(lineSplit[0].equalsIgnoreCase("help")) {
                 //TODO
                 System.out.println("ls\t\tDisplays directories and files in the current directory.\n" +
@@ -47,28 +60,57 @@ public class login {
             }else {
                 System.out.println("[" + lineSplit[0] + "] is not recognized as an internal or external command");
             }
-
         }
     }
 
-    private static void list_files_fromServer(FTPClient ftpClient){
+    private static void list_files_fromServer(FTPClient ftpClient, String remotePath){
         ftpClient.enterLocalPassiveMode();
+        System.out.println(System.getProperty("user.dir") + "\\" + remotePath + ": ");
         try{
-            FTPFile[] listFiles = ftpClient.listFiles();
+            FTPFile[] listFiles = ftpClient.listFiles(remotePath);
             if (listFiles != null) {
                 for (FTPFile file : listFiles) {
-                    System.out.print(file.getName() + '\t');
+                    if(file.isDirectory()) {
+                        System.out.print(file.getName() + "/\t");
+                    }else {
+                        System.out.print(file.getName() + "\t");
+                    }
                 }
             }
         }catch (IOException e) {
             System.out.println("Oops! Something wrong happened: " + e);
         }
-        System.out.println();
+        System.out.println("\n");
+    }
+    private static void list_files_fromLocal(String localPath){
+        System.out.println(System.getProperty("user.dir") + "\\" + localPath+": ");
+        File localDir = new File(System.getProperty("user.dir") + "/" + localPath);
+        File[] listFiles = localDir.listFiles();
+        if(listFiles !=null) {
+            for (File file : listFiles) {
+                if(file.isDirectory()) {
+                    System.out.print(file.getName() + "/\t");
+                }else {
+                    System.out.print(file.getName() + "\t");
+                }
+            }
+        }
+        System.out.println("\n");
     }
 
-    private static void cd_directories_fromServer(FTPClient ftpClient, String lineSplit){
-        //TODO
-        System.out.println(lineSplit);
+    //FIXME
+    private static String cd_directories_fromLocal(String pathname){
+        File localDir = new File(System.getProperty("user.dir") + "/" + pathname);
+        if(pathname.equals("..")){
+            System.setProperty("user.dir", localDir.getAbsoluteFile().getParent());
+            System.out.println(localDir.getAbsolutePath());
+            return pathname;
+        }else {
+            localDir = new File(pathname);
+            System.setProperty("user.dir", localDir.getAbsolutePath());
+            System.out.println(localDir.getAbsolutePath());
+            return pathname;
+        }
     }
 
     public static void main(String[] args) {
@@ -97,6 +139,7 @@ public class login {
             } else {
                 System.out.println("LOGGED IN SERVER");
             }
+            System.out.println();
 
             shell(ftpClient);
 
