@@ -31,7 +31,7 @@ public class login {
             }else if(lineSplit[0].equals("get")) {
                 if (lineSplit.length < 2) {
                     //print_usage("get");
-                    System.out.println("need remote file name!");
+                    System.out.println("get: missing file operand\nUsage: get [filename]");
                     continue;
                 }
 
