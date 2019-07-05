@@ -1,7 +1,4 @@
-import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
+import java.io.*;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
@@ -21,7 +18,7 @@ public class login {
         String command;
 
         while (true) {
-            System.out.print("\nFTP Shell >> ");
+            System.out.print("FTP Shell >> ");
             command = console.readLine();
             String[] lineSplit = command.split(" ");
 
@@ -31,22 +28,36 @@ public class login {
             }else if(lineSplit[0].equals("get")) {
                 if (lineSplit.length < 2) {
                     //print_usage("get");
-                    System.out.println("get: missing file operand\nUsage: get [filename]");
+                    System.out.println("get: missing file operand\nUsage: get [filename]\n");
                     continue;
                 }
-
                 get_file_fromServer(ftpClient, lineSplit[1]);
 
             }else if(lineSplit[0].equals("put")) {
                 if (lineSplit.length != 2) {
                     //print_usage("put");
-                    System.out.println("put: missing file operand\nUsage: put [filename]");
+                    System.out.println("put: missing file operand\nUsage: put [filename]\n");
                     continue;
                 }
-
                 put_file_toServer(ftpClient, lineSplit[1]);
+
+            }else if(lineSplit[0].equals("rls")) {
+                if(lineSplit.length==1) {
+                    list_files_fromServer(ftpClient, "");
+                } else {
+                    for(int i=1; i<lineSplit.length;++i){
+                        list_files_fromServer(ftpClient, lineSplit[i]);
+                    }
+                }
+
             }else if(lineSplit[0].equals("ls")) {
-                list_files_fromServer(ftpClient);
+                if(lineSplit.length==1) {
+                    list_files_fromLocal("");
+                } else {
+                    for(int i=1; i<lineSplit.length;++i) {
+                        list_files_fromLocal(lineSplit[i]);
+                    }
+                }
 
             }else if(lineSplit[0].equals("cd")) {
                 //TODO
@@ -55,6 +66,7 @@ public class login {
             }else if(command.equalsIgnoreCase("exit")||command.equalsIgnoreCase("quit"))  {
                 System.out.println("Goodbye");
                 System.exit(0);
+
             }else if(lineSplit[0].equalsIgnoreCase("help")) {
                 //TODO
                 System.out.println("ls\t\tDisplays directories and files in the current directory.\n" +
@@ -64,23 +76,43 @@ public class login {
             }else {
                 System.out.println("[" + lineSplit[0] + "] is not recognized as an internal or external command");
             }
-
         }
     }
 
-    private static void list_files_fromServer(FTPClient ftpClient){
+    private static void list_files_fromServer(FTPClient ftpClient, String remotePath){
         ftpClient.enterLocalPassiveMode();
+        System.out.println(System.getProperty("user.dir") + "\\" + remotePath + ": ");
         try{
-            FTPFile[] listFiles = ftpClient.listFiles();
+            FTPFile[] listFiles = ftpClient.listFiles(remotePath);
             if (listFiles != null) {
                 for (FTPFile file : listFiles) {
-                    System.out.print(file.getName() + '\t');
+                    if(file.isDirectory()) {
+                        System.out.print(file.getName() + "/\t");
+                    }else {
+                        System.out.print(file.getName() + "\t");
+                    }
                 }
             }
         }catch (IOException e) {
             System.out.println("Oops! Something wrong happened: " + e);
         }
-        System.out.println();
+        System.out.println("\n");
+    }
+
+    private static void list_files_fromLocal(String localPath){
+        System.out.println(System.getProperty("user.dir") + "\\" + localPath+": ");
+        File localDir = new File(System.getProperty("user.dir") + "/" + localPath);
+        File[] listFiles = localDir.listFiles();
+        if(listFiles !=null) {
+            for (File file : listFiles) {
+                if(file.isDirectory()) {
+                    System.out.print(file.getName() + "/\t");
+                }else {
+                    System.out.print(file.getName() + "\t");
+                }
+            }
+        }
+        System.out.println("\n");
     }
 
     private static void cd_directories_fromServer(FTPClient ftpClient, String lineSplit){
@@ -189,6 +221,7 @@ public class login {
             } else {
                 System.out.println("LOGGED IN SERVER");
             }
+            System.out.println();
 
             shell(ftpClient);
 
