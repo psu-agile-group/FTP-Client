@@ -37,6 +37,14 @@ public class login {
 
                 get_file_fromServer(ftpClient, lineSplit[1]);
 
+            }else if(lineSplit[0].equals("put")) {
+                if (lineSplit.length != 2) {
+                    //print_usage("put");
+                    System.out.println("put: missing file operand\nUsage: put [filename]");
+                    continue;
+                }
+
+                put_file_toServer(ftpClient, lineSplit[1]);
             }else if(lineSplit[0].equals("ls")) {
                 list_files_fromServer(ftpClient);
 
@@ -100,6 +108,56 @@ public class login {
             } else {
                 System.out.print("\"" + remotePath + "\"" + " does not exist.");
             }
+        }catch (IOException e) {
+            System.out.println("Oops! Something wrong happened: " + e);
+        }
+    }
+
+    private static void put_file_toServer(FTPClient ftpClient, String localPath){
+        ftpClient.enterLocalPassiveMode();
+        try{
+            // use same name for remote file name
+            String remotePath = localPath;
+            int index = Math.max(remotePath.lastIndexOf('/'), remotePath.lastIndexOf('\\'));
+            if (index != -1 ) {
+                remotePath = remotePath.substring(index + 1);
+            }
+
+            //for test - ftpClient.changeWorkingDirectory("/htdocs");
+
+            // combine working directory and file name
+            String remoteDir = ftpClient.printWorkingDirectory();
+            if (remoteDir.charAt(remoteDir.length()-1) != '/')
+                remotePath = remoteDir + '/' + remotePath;
+
+            // ask if overwrite
+            String[] names = ftpClient.listNames(remotePath);
+            if (names.length == 1) { //check file exists
+                BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
+                System.out.println("file exists, overwrite? ('y' to continue)");
+                String cmd = console.readLine();
+                if (cmd.charAt(0) != 'y'){
+                    System.out.println("uploading is cancelled.");
+                    return;
+                }
+            }
+
+            // check local file exists
+            File inFile = new File(localPath);
+            if (inFile.exists() == false) {
+                System.out.println("file does not exist!");
+                return;
+            }
+
+            // upload it
+            InputStream input = new FileInputStream(inFile);
+            boolean sucess = ftpClient.storeFile(remotePath, input);
+            if (sucess) {
+                System.out.print("\"" + remotePath + "\"" + " is uploaded.");
+            } else {
+                System.out.print("\"" + remotePath + "\"" + " uploading failed.");
+            }
+
         }catch (IOException e) {
             System.out.println("Oops! Something wrong happened: " + e);
         }
