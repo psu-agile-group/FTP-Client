@@ -50,6 +50,8 @@ public class login {
                     }
                 }
 
+            }else if (lineSplit[0].equals("mkdir")){
+                create_dir_on_server(ftpClient, command);
             }else if(lineSplit[0].equals("ls")) {
                 if(lineSplit.length==1) {
                     list_files_fromLocal("");
@@ -118,6 +120,34 @@ public class login {
     private static void cd_directories_fromServer(FTPClient ftpClient, String lineSplit){
         //TODO
         System.out.println(lineSplit);
+    }
+
+    private static void create_dir_on_server(FTPClient ftpClient, String lineSplit)
+    {
+        ftpClient.enterLocalActiveMode();
+        boolean flag = false;
+        try {
+            flag = ftpClient.changeWorkingDirectory("/htdocs");
+            show_Message_fromServer(ftpClient);
+            if(flag)
+                System.out.println("hit");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            String dirToCreate = lineSplit;
+            boolean success = ftpClient.makeDirectory(dirToCreate);
+            show_Message_fromServer(ftpClient);
+            if (success) {
+                System.out.println("Successfully created directory: " + dirToCreate);
+            } else {
+                System.out.println("Failed to create directory. See server's reply.");
+            }
+        } catch (IOException ex) {
+            System.out.println("Oops! Something wrong happened");
+            ex.printStackTrace();
+        }
     }
 
     private static void get_file_fromServer(FTPClient ftpClient, String remotePath){
