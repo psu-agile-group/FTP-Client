@@ -52,6 +52,7 @@ public class login {
 
             }else if (lineSplit[0].equals("mkdir")){
                 create_dir_on_server(ftpClient, command);
+                
             }else if(lineSplit[0].equals("ls")) {
                 if(lineSplit.length==1) {
                     list_files_fromLocal("");
@@ -83,6 +84,7 @@ public class login {
                 //TODO
                 System.out.println("ls\t\tDisplays directories and files in the current directory.\n" +
                         "cd\t\tChanges the current directory.\n" +
+                        "mkdir\tMake directory.\n" + 
                         "exit\tExit FTP Shell.");
 
             }else {
