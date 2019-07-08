@@ -34,12 +34,12 @@ public class login {
                 get_file_fromServer(ftpClient, lineSplit[1]);
 
             }else if(lineSplit[0].equals("put")) {
-                if (lineSplit.length != 2) {
+                if (lineSplit.length != 3) {
                     //print_usage("put");
-                    System.out.println("put: missing file operand\nUsage: put [filename]\n");
+                    System.out.println("put: missing file operand\nUsage: put [local_file] [remote_file]\n");
                     continue;
                 }
-                put_file_toServer(ftpClient, lineSplit[1]);
+                put_file_toServer(ftpClient, lineSplit[1], lineSplit[2]);
 
             }else if(lineSplit[0].equals("rls")) {
                 if(lineSplit.length==1) {
@@ -65,6 +65,16 @@ public class login {
                 //TODO
                 cd_directories_fromServer(ftpClient, command);
 
+            }else if(lineSplit[0].equals("rn")) {
+                //TODO
+                if (lineSplit.length != 3) {
+                    System.out.println("The format for renaming the file: 'rn old_file_name new_file_name'");
+                }
+                else {
+                    String old = lineSplit[1];
+                    String new_file = lineSplit[2];
+                    rename_file_server(ftpClient,old, new_file);
+                }
             }else if(command.equalsIgnoreCase("exit")||command.equalsIgnoreCase("quit"))  {
                 System.out.println("Goodbye");
                 System.exit(0);
@@ -173,25 +183,19 @@ public class login {
         }catch (IOException e) {
             System.out.println("Oops! Something wrong happened: " + e);
         }
+        System.out.println("\n");
     }
 
-    private static void put_file_toServer(FTPClient ftpClient, String localPath){
+    private static void put_file_toServer(FTPClient ftpClient, String localPath, String remotePath){
         ftpClient.enterLocalPassiveMode();
         try{
-            // use same name for remote file name
-            String remotePath = localPath;
-            int index = Math.max(remotePath.lastIndexOf('/'), remotePath.lastIndexOf('\\'));
-            if (index != -1 ) {
-                remotePath = remotePath.substring(index + 1);
+            // check local file exists
+            File inFile = new File(localPath);
+            if (inFile.exists() == false) {
+                System.out.println("file does not exist!");
+                return;
             }
-
-            //for test - ftpClient.changeWorkingDirectory("/htdocs");
-
-            // combine working directory and file name
-            String remoteDir = ftpClient.printWorkingDirectory();
-            if (remoteDir.charAt(remoteDir.length()-1) != '/')
-                remotePath = remoteDir + '/' + remotePath;
-
+            
             // ask if overwrite
             String[] names = ftpClient.listNames(remotePath);
             if (names.length == 1) { //check file exists
@@ -204,24 +208,59 @@ public class login {
                 }
             }
 
-            // check local file exists
-            File inFile = new File(localPath);
-            if (inFile.exists() == false) {
-                System.out.println("file does not exist!");
-                return;
-            }
-
             // upload it
             InputStream input = new FileInputStream(inFile);
             boolean sucess = ftpClient.storeFile(remotePath, input);
             if (sucess) {
-                System.out.print("\"" + remotePath + "\"" + " is uploaded.");
+                System.out.print("\"" + remotePath + "\"" + " is uploaded ok.");
             } else {
-                System.out.print("\"" + remotePath + "\"" + " uploading failed.");
+                System.out.print("\"" + remotePath + "\"" + " is uploaded failed.");
             }
 
         }catch (IOException e) {
             System.out.println("Oops! Something wrong happened: " + e);
+        }
+        System.out.println("\n");
+    }
+
+    private static void rename_file_server (FTPClient ftpClient, String old_name, String new_name) throws IOException {
+        String oldFile = old_name;
+        String newFile = new_name;
+
+        // Enter the whole direct path. For example: /htdocs/index2.html , change to /htdocs/index4.html
+        if ((oldFile.charAt(0)) == '/') {
+            System.out.println("This is direct path");
+            String [] pathElements = old_name.split("/");
+            String [] pathElementsNew = new_name.split("/");
+            // Each element is a directory, check if the directory is valid before renaming
+            for (int i = 0; i < pathElements.length-1; ++i){
+                boolean checkDir = ftpClient.changeWorkingDirectory(pathElements[i]);
+                if (!checkDir){
+                    System.out.println("Invalid old directory/file: " + pathElements[i]);
+                }
+            }
+            for (int i = 0; i < pathElementsNew.length-1; ++i){
+                boolean checkDir = ftpClient.changeWorkingDirectory(pathElementsNew[i]);
+                if (!checkDir){
+                    System.out.println("Invalid new directory/file: " + pathElementsNew[i]);
+                }
+            }
+            // Valid directories, renaming the file
+            boolean success = ftpClient.rename(oldFile, newFile);
+            if (success) {
+                System.out.println("Direct Path: " + oldFile + " was successfully renamed to: " + newFile);
+            } else {
+                System.out.println("Failed to rename: " + oldFile);
+            }
+        }
+        //Relative Path. You must change the working directory to /htdocs to use this.
+        else {
+            boolean success = ftpClient.rename(oldFile, newFile);
+            if (success) {
+                System.out.println(oldFile + " was successfully renamed to: " + newFile);
+            } else {
+                System.out.println("Failed to rename: " + oldFile);
+            }
         }
     }
 
