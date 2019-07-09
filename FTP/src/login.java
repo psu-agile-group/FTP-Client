@@ -18,7 +18,7 @@ public class login {
         String command;
 
         while (true) {
-            System.out.print("FTP Shell >> ");
+            System.out.print("FTP Shell" + ftpClient.printWorkingDirectory() + ">> ");
             command = console.readLine();
             String[] lineSplit = command.split(" ");
 
@@ -50,9 +50,6 @@ public class login {
                     }
                 }
 
-            }else if (lineSplit[0].equals("mkdir")){
-                create_dir_on_server(ftpClient, command);
-                
             }else if(lineSplit[0].equals("ls")) {
                 if(lineSplit.length==1) {
                     list_files_fromLocal("");
@@ -62,14 +59,21 @@ public class login {
                     }
                 }
 
+            }else if (lineSplit[0].equals("mkdir")){
+                create_dir_on_server(ftpClient, command);
+
             }else if(lineSplit[0].equals("cd")) {
-                //TODO
-                cd_directories_fromServer(ftpClient, command);
+                //FIXME
+                if (lineSplit.length == 2) {
+                    change_working_directory_on_server(ftpClient, lineSplit[1]);
+                } else {
+                    System.out.println(ftpClient.printWorkingDirectory()+"\n");
+                }
 
             }else if(lineSplit[0].equals("rn")) {
                 //TODO
                 if (lineSplit.length != 3) {
-                    System.out.println("The format for renaming the file: 'rn old_file_name new_file_name'");
+                    System.out.println("rn: missing file operand\nUsage: rn [old_filename] [new_filename]\n");
                 }
                 else {
                     String old = lineSplit[1];
@@ -83,19 +87,22 @@ public class login {
             }else if(lineSplit[0].equalsIgnoreCase("help")) {
                 //TODO
                 System.out.println("ls\t\tDisplays directories and files in the current directory.\n" +
+                        "rls\t\tDisplays directories and files in the remote directory.\n" +
                         "cd\t\tChanges the current directory.\n" +
-                        "mkdir\tMake directory.\n" + 
-                        "exit\tExit FTP Shell.");
+                        "mkdir\tMake directory.\n" +
+                        "rn\t\tRename file.\n" +
+                        "get\t\tGet a file from server.\n" +
+                        "put\t\tPut a file to server.\n" +
+                        "exit\tExit FTP Shell.\n");
 
             }else {
-                System.out.println("[" + lineSplit[0] + "] is not recognized as an internal or external command");
+                System.out.println("[" + lineSplit[0] + "] is not recognized as an internal or external command\n");
             }
         }
     }
 
     private static void list_files_fromServer(FTPClient ftpClient, String remotePath){
         ftpClient.enterLocalPassiveMode();
-        System.out.println(System.getProperty("user.dir") + "\\" + remotePath + ": ");
         try{
             FTPFile[] listFiles = ftpClient.listFiles(remotePath);
             if (listFiles != null) {
@@ -129,9 +136,16 @@ public class login {
         System.out.println("\n");
     }
 
-    private static void cd_directories_fromServer(FTPClient ftpClient, String lineSplit){
-        //TODO
-        System.out.println(lineSplit);
+    private static void change_working_directory_on_server(FTPClient ftpClient, String remotePath){
+        try {
+            if(remotePath == ".."){
+                ftpClient.changeToParentDirectory();
+            } else {
+                ftpClient.changeWorkingDirectory(remotePath);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void create_dir_on_server(FTPClient ftpClient, String lineSplit)
