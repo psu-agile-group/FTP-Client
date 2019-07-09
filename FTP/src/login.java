@@ -45,8 +45,18 @@ public class login {
                 if(lineSplit.length==1) {
                     list_files_fromServer(ftpClient, "");
                 } else {
-                    for(int i=1; i<lineSplit.length;++i){
-                        list_files_fromServer(ftpClient, lineSplit[i]);
+                    if(lineSplit[1].equals("-l")) {
+                        if(lineSplit.length==2) {
+                            long_list_files_fromServer(ftpClient, "");
+                        } else {
+                            for (int i = 2; i < lineSplit.length; ++i) {
+                                long_list_files_fromServer(ftpClient, lineSplit[i]);
+                            }
+                        }
+                    } else {
+                        for (int i = 1; i < lineSplit.length; ++i) {
+                            list_files_fromServer(ftpClient, lineSplit[i]);
+                        }
                     }
                 }
 
@@ -54,7 +64,7 @@ public class login {
                 if(lineSplit.length==1) {
                     list_files_fromLocal("");
                 } else {
-                    for(int i=1; i<lineSplit.length;++i) {
+                    for (int i = 1; i < lineSplit.length; ++i) {
                         list_files_fromLocal(lineSplit[i]);
                     }
                 }
@@ -113,6 +123,19 @@ public class login {
                         System.out.print(file.getName() + "\t");
                     }
                 }
+            }
+        }catch (IOException e) {
+            System.out.println("Oops! Something wrong happened: " + e);
+        }
+        System.out.println("\n");
+    }
+
+    private static void long_list_files_fromServer(FTPClient ftpClient, String remotePath){
+        ftpClient.enterLocalPassiveMode();
+        try{
+            FTPFile[] listFiles = ftpClient.listDirectories(remotePath);
+            for (FTPFile file : listFiles) {
+                System.out.println(file);
             }
         }catch (IOException e) {
             System.out.println("Oops! Something wrong happened: " + e);
