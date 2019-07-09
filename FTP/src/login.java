@@ -137,9 +137,12 @@ public class login {
     }
 
     private static void change_working_directory_on_server(FTPClient ftpClient, String remotePath){
-        //TODO
         try {
-            ftpClient.changeWorkingDirectory(remotePath);
+            if(remotePath == ".."){
+                ftpClient.changeToParentDirectory();
+            } else {
+                ftpClient.changeWorkingDirectory(remotePath);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
