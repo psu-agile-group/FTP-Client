@@ -1,9 +1,10 @@
+package com.psuagilegroup;
 import java.io.*;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
-public class login {
+public class App {
 
     private static void show_Message_fromServer(FTPClient ftpClient) {
         String[] replies = ftpClient.getReplyStrings();
@@ -234,7 +235,7 @@ public class login {
                 System.out.println("file does not exist!");
                 return;
             }
-            
+
             // ask if overwrite
             String[] names = ftpClient.listNames(remotePath);
             if (names.length == 1) { //check file exists
