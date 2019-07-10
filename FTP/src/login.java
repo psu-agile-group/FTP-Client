@@ -91,6 +91,7 @@ public class login {
                     rename_file_server(ftpClient,old, new_file);
                 }
             }else if(command.equalsIgnoreCase("exit")||command.equalsIgnoreCase("quit"))  {
+                ftpClient.logout();
                 System.out.println("Goodbye");
                 System.exit(0);
 
