@@ -90,7 +90,9 @@ public class login {
                     String new_file = lineSplit[2];
                     rename_file_server(ftpClient,old, new_file);
                 }
-            }else if(command.equalsIgnoreCase("exit")||command.equalsIgnoreCase("quit"))  {
+            }else if(command.equalsIgnoreCase("exit")
+                    ||command.equalsIgnoreCase("quit")
+                    ||command.equalsIgnoreCase("logout"))  {
                 ftpClient.logout();
                 System.out.println("Goodbye");
                 System.exit(0);
