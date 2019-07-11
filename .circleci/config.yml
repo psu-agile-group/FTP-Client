@@ -1,0 +1,24 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/openjdk:8-jdk
+    working_directory: ~/repo
+    environment:
+      MAVEN_OPTS: -Xmx3200m
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - ftpclient-{{ checksum "pom.xml" }}
+      - run: mvn dependency:go-offline
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: ftpclient-{{ checksum "pom.xml" }}
+      # - run: mvn clean install -U
+      # - run: mvn package
+      - store_test_results:
+          path: target/surefire-reports
+      - store_artifacts:
+path: target/ftpclient-0.0.1-SNAPSHOT.jar
