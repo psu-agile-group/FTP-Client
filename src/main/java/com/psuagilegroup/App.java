@@ -1,5 +1,8 @@
 package com.psuagilegroup;
 import java.io.*;
+import java.util.Collections;
+import java.util.HashMap;
+
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
@@ -18,22 +21,19 @@ public class App {
         BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
         String command;
 
+        HashMap<String, Command> commands = new HashMap<>();
+        commands.put("logout", new logoutCommand(ftpClient));
+        commands.put("", new emptyCommand(ftpClient));
+        commands.put("get", new getCommand(ftpClient));
+
         while (true) {
             System.out.print("FTP Shell" + ftpClient.printWorkingDirectory() + ">> ");
             command = console.readLine();
             String[] lineSplit = command.split(" ");
 
-            if (command.equals("")) {
+            if(commands.containsKey(lineSplit[0])) {
+                commands.get(lineSplit[0]).run(lineSplit);
                 continue;
-
-            }else if(lineSplit[0].equals("get")) {
-                if (lineSplit.length < 2) {
-                    //print_usage("get");
-                    System.out.println("get: missing file operand\nUsage: get [filename]\n");
-                    continue;
-                }
-                get_file_fromServer(ftpClient, lineSplit[1]);
-
             }else if(lineSplit[0].equals("put")) {
                 if (lineSplit.length != 3) {
                     //print_usage("put");
@@ -210,31 +210,6 @@ public class App {
         }
     }
 
-    private static void get_file_fromServer(FTPClient ftpClient, String remotePath){
-        ftpClient.enterLocalPassiveMode();
-        try{
-            String[] names = ftpClient.listNames(remotePath);
-            if (names.length == 1) { //check file exists
-
-                // use same name for local file name
-                String localPath = remotePath;
-                int index = localPath.lastIndexOf('/');
-                if (index != -1) {
-                    localPath = localPath.substring(index + 1);
-                }
-
-                OutputStream local = new FileOutputStream(localPath);
-                ftpClient.retrieveFile(remotePath, local);
-                local.close();
-                System.out.print("saved to " + localPath);
-            } else {
-                System.out.print("\"" + remotePath + "\"" + " does not exist.");
-            }
-        }catch (IOException e) {
-            System.out.println("Oops! Something wrong happened: " + e);
-        }
-        System.out.println("\n");
-    }
 
     private static void put_file_toServer(FTPClient ftpClient, String localPath, String remotePath){
         ftpClient.enterLocalPassiveMode();
