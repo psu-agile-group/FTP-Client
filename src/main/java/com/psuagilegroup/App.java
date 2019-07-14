@@ -27,6 +27,7 @@ public class App {
         commands.put("logout", new logoutCommand(ftpClient));
         commands.put("", new emptyCommand(ftpClient));
         commands.put("get", new getCommand(ftpClient));
+        commands.put("cd", new cdCommand(ftpClient));
 
         while (true) {
             System.out.print("FTP Shell:" + currentSession.remote_directory + " >> ");
@@ -34,7 +35,7 @@ public class App {
             String[] lineSplit = command.split(" ");
 
             if(commands.containsKey(lineSplit[0])) {
-                commands.get(lineSplit[0]).run(currentSession, lineSplit);
+                currentSession = commands.get(lineSplit[0]).run(currentSession, lineSplit);
                 continue;
             }else if(lineSplit[0].equals("put")) {
                 if (lineSplit.length != 3) {
@@ -74,15 +75,6 @@ public class App {
 
             }else if (lineSplit[0].equals("mkdir")){
                 create_dir_on_server(ftpClient, command);
-
-            }else if(lineSplit[0].equals("cd")) {
-                //FIXME
-                if (lineSplit.length == 2) {
-                    change_working_directory_on_server(ftpClient, lineSplit[1]);
-                } else {
-                    System.out.println(ftpClient.printWorkingDirectory()+"\n");
-                }
-
             }else if(lineSplit[0].equals("rrn")) {
                 //TODO
                 if (lineSplit.length != 3) {
@@ -180,18 +172,6 @@ public class App {
             }
         }
         System.out.println("\n");
-    }
-
-    private static void change_working_directory_on_server(FTPClient ftpClient, String remotePath){
-        try {
-            if(remotePath == ".."){
-                ftpClient.changeToParentDirectory();
-            } else {
-                ftpClient.changeWorkingDirectory(remotePath);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private static void create_dir_on_server(FTPClient ftpClient, String lineSplit)
