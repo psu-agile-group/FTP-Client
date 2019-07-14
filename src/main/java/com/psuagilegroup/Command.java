@@ -9,5 +9,6 @@ public abstract class Command {
         this.ftpClient = ftpClient;
     }
     public abstract FTPSession run( FTPSession currentSession, String[] args );
+    public String help(){return "";}
 }
 

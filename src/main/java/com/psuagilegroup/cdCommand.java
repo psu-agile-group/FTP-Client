@@ -11,13 +11,18 @@ public class cdCommand extends Command {
     }
 
     @Override
+    public String help(){
+        return "cd <directory>";
+    }
+    @Override
     public FTPSession run( FTPSession currentSession, String[] lineSplit ){
 
         //FIXME
         if (lineSplit.length == 2) {
             change_working_directory_on_server(currentSession, lineSplit[1]);
+        }else {
+            currentSession.output = "Error: Invalid Argument";
         }
-        currentSession.output = "Error: Invalid Argument";
         return currentSession;
     }
 

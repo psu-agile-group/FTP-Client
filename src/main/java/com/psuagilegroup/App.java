@@ -2,6 +2,7 @@ package com.psuagilegroup;
 import java.io.*;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -36,6 +37,10 @@ public class App {
 
             if(commands.containsKey(lineSplit[0])) {
                 currentSession = commands.get(lineSplit[0]).run(currentSession, lineSplit);
+                System.out.println(currentSession.output);
+
+                // Clear the output after printing
+                currentSession.output = "";
                 continue;
             }else if(lineSplit[0].equals("put")) {
                 if (lineSplit.length != 3) {
@@ -98,18 +103,11 @@ public class App {
             }else if(command.equalsIgnoreCase("exit")||command.equalsIgnoreCase("quit"))  {
                 System.out.println("Goodbye");
                 System.exit(0);
-
             }else if(lineSplit[0].equalsIgnoreCase("help")) {
                 //TODO
-                System.out.println("ls\t\tDisplays directories and files in the current directory.\n" +
-                        "rls\t\tDisplays directories and files in the remote directory.\n" +
-                        "cd\t\tChanges the current directory.\n" +
-                        "mkdir\tMake directory.\n" +
-                        "rn\t\tRename file.\n" +
-                        "get\t\tGet a file from server.\n" +
-                        "put\t\tPut a file to server.\n" +
-                        "exit\tExit FTP Shell.\n");
-
+                for( Map.Entry<String, Command> entry: commands.entrySet()){
+                    System.out.println(entry.getValue().help());
+                }
             }else {
                 System.out.println("[" + lineSplit[0] + "] is not recognized as an internal or external command\n");
             }

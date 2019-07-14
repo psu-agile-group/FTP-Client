@@ -9,7 +9,10 @@ public class logoutCommand extends Command
     {
         super(ftpClient);
     }
-
+    @Override
+    public String help(){
+        return "logout";
+    }
     @Override
     public FTPSession run(  FTPSession currentSession, String[] args )
     {
