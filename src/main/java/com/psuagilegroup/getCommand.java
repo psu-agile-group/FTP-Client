@@ -15,16 +15,16 @@ public class getCommand extends Command
     }
 
     @Override
-    public Boolean run( String[] lineSplit )
+    public FTPSession run( FTPSession currentSession, String[] lineSplit )
     {
 
         if (lineSplit.length < 2) {
             //print_usage("get");
             System.out.println("get: missing file operand\nUsage: get [filename]\n");
-            return false;
+        }else {
+            get_file_fromServer(lineSplit[1]);
         }
-        get_file_fromServer( lineSplit[1]);
-        return true;
+        return currentSession;
     }
 
     private void get_file_fromServer( String remotePath){

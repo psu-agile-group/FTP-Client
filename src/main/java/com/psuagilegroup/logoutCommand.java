@@ -11,7 +11,7 @@ public class logoutCommand extends Command
     }
 
     @Override
-    public Boolean run( String[] args )
+    public FTPSession run(  FTPSession currentSession, String[] args )
     {
         try {
             this.ftpClient.logout();
@@ -21,6 +21,9 @@ public class logoutCommand extends Command
         }
         System.out.println("Goodbye");
         System.exit(0);
-        return true;
+
+        currentSession.local_directory = "";
+        currentSession.remote_directory = "";
+        return currentSession;
     }
 }

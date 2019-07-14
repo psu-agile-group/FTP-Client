@@ -8,6 +8,6 @@ public abstract class Command {
     {
         this.ftpClient = ftpClient;
     }
-    public abstract Boolean run( String[] args );
+    public abstract FTPSession run( FTPSession currentSession, String[] args );
 }
 

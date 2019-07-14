@@ -11,8 +11,8 @@ public class emptyCommand extends Command
     }
 
     @Override
-    public Boolean run( String[] args )
+    public FTPSession run( FTPSession currentSession,  String[] args )
     {
-        return true;
+        return currentSession;
     }
 }

@@ -18,6 +18,8 @@ public class App {
         }
     }
     private static void shell(FTPClient ftpClient) throws IOException {
+        FTPSession currentSession = initSession(ftpClient);
+
         BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
         String command;
 
@@ -27,12 +29,12 @@ public class App {
         commands.put("get", new getCommand(ftpClient));
 
         while (true) {
-            System.out.print("FTP Shell" + ftpClient.printWorkingDirectory() + ">> ");
+            System.out.print("FTP Shell:" + currentSession.remote_directory + " >> ");
             command = console.readLine();
             String[] lineSplit = command.split(" ");
 
             if(commands.containsKey(lineSplit[0])) {
-                commands.get(lineSplit[0]).run(lineSplit);
+                commands.get(lineSplit[0]).run(currentSession, lineSplit);
                 continue;
             }else if(lineSplit[0].equals("put")) {
                 if (lineSplit.length != 3) {
@@ -122,6 +124,16 @@ public class App {
         }
     }
 
+    private static FTPSession initSession( FTPClient ftpClient ){
+        FTPSession currentSession = new FTPSession();
+        try {
+            currentSession.remote_directory = ftpClient.printWorkingDirectory();
+            currentSession.local_directory = new java.io.File(".").getCanonicalPath();
+        }catch(java.io.IOException e) {
+            System.out.println("Oops! Something wrong happened: " + e);
+        }
+        return currentSession;
+    }
     private static void list_files_fromServer(FTPClient ftpClient, String remotePath){
         ftpClient.enterLocalPassiveMode();
         try{
