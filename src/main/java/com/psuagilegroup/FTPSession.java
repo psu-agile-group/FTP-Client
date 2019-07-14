@@ -1,8 +1,8 @@
 package com.psuagilegroup;
 
 public class FTPSession {
-    String local_directory;
-    String remote_directory;
+    String local_directory="";
+    String remote_directory="";
 
-    String output;
+    String output="";
 }
