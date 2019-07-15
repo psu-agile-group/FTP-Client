@@ -23,16 +23,16 @@ public class App {
         String command;
 
         HashMap<String, Command> commands = new HashMap<>();
-        commands.put("", new emptyCommand(ftpClient));
+        commands.put("",       new emptyCommand(ftpClient));
         commands.put("logout", new logoutCommand(ftpClient));
-        commands.put("get", new getCommand(ftpClient));
-        commands.put("cd", new cdCommand(ftpClient));
-        commands.put("ls", new lsCommand(ftpClient));
-        commands.put("rls", new rlsCommand(ftpClient));
-        commands.put("rrn", new rrnCommand(ftpClient));
-        commands.put("rn", new rnCommand(ftpClient));
-        commands.put("mkdir", new mkdirCommand(ftpClient));
-        commands.put("put", new putCommand(ftpClient));
+        commands.put("get",    new getCommand(ftpClient));
+        commands.put("cd",     new cdCommand(ftpClient));
+        commands.put("ls",     new lsCommand(ftpClient));
+        commands.put("rls",    new rlsCommand(ftpClient));
+        commands.put("rrn",    new rrnCommand(ftpClient));
+        commands.put("rn",     new rnCommand(ftpClient));
+        commands.put("mkdir",  new mkdirCommand(ftpClient));
+        commands.put("put",    new putCommand(ftpClient));
 
         while (true) {
             System.out.print("FTP Shell:" + currentSession.remote_directory + " >> ");
@@ -45,7 +45,6 @@ public class App {
 
                 // Clear the output after printing
                 currentSession.output = "";
-                continue;
             }else if(command.equalsIgnoreCase("exit")||command.equalsIgnoreCase("quit"))  {
                 System.out.println("Goodbye");
                 System.exit(0);
