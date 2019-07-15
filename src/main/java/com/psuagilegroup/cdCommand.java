@@ -12,7 +12,7 @@ public class cdCommand extends Command {
 
     @Override
     public String help(){
-        return "cd <directory>";
+        return "cd\t\tChanges the current directory.";
     }
     @Override
     public FTPSession run( FTPSession currentSession, String[] lineSplit ){

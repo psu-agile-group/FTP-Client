@@ -16,7 +16,7 @@ public class getCommand extends Command
 
     @Override
     public String help(){
-        return "get <filename>";
+        return "get\t\tGet a file from server.";
     }
     @Override
     public FTPSession run( FTPSession currentSession, String[] lineSplit )

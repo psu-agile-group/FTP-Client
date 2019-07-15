@@ -11,7 +11,7 @@ public class logoutCommand extends Command
     }
     @Override
     public String help(){
-        return "logout";
+        return "logout\tLogs out of server and exits program.";
     }
     @Override
     public FTPSession run(  FTPSession currentSession, String[] args )
