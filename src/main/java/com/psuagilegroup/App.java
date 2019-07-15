@@ -61,6 +61,7 @@ public class App {
                     }
                 }
 
+
             }else if(lineSplit[0].equals("ls")) {
                 if(lineSplit.length==1) {
                     list_files_fromLocal("");
@@ -73,6 +74,13 @@ public class App {
             }else if (lineSplit[0].equals("mkdir")){
                 create_dir_on_server(ftpClient, command);
 
+            }else if (lineSplit[0].equals("cprdir")){
+                if(lineSplit.length != 4)
+                {
+                    System.out.println("cprdir: need cprdir oldDir newDir\n");
+                    continue;
+                }
+                copy_dir_remote(ftpClient, lineSplit[1], lineSplit[2], lineSplit[3]);
             }else if(lineSplit[0].equals("cd")) {
                 //FIXME
                 if (lineSplit.length == 2) {
@@ -114,6 +122,7 @@ public class App {
                         "rn\t\tRename file.\n" +
                         "get\t\tGet a file from server.\n" +
                         "put\t\tPut a file to server.\n" +
+                        "cprdir\tCopy directory on remote server.\n" +
                         "exit\tExit FTP Shell.\n");
 
             }else {
@@ -187,7 +196,7 @@ public class App {
         ftpClient.enterLocalActiveMode();
         boolean flag = false;
         try {
-            flag = ftpClient.changeWorkingDirectory("/htdocs");
+            flag = ftpClient.changeWorkingDirectory("/htdocs"); //always create dir under htdocs
             show_Message_fromServer(ftpClient);
             if(flag)
                 System.out.println("hit");
@@ -210,8 +219,66 @@ public class App {
         }
     }
 
-    private static void get_file_fromServer(FTPClient ftpClient, String remotePath){
+    private static void copy_dir_remote(FTPClient ftpClient, String remoteDirectory, String oldDirName, String newDirName)
+    {
         ftpClient.enterLocalPassiveMode();
+        String newPath = remoteDirectory + "/" + newDirName;
+        String oldPath = remoteDirectory + "/" + oldDirName;
+        try {
+            boolean success;
+            success = ftpClient.makeDirectory(newPath);
+            show_Message_fromServer(ftpClient);
+            if (success) {
+                System.out.println("Successfully created directory: " + newPath);
+            } else {
+                System.out.println("Failed to create directory. See server's reply.");
+            }
+
+            FTPFile[] listFiles = ftpClient.listDirectories(oldPath);
+            copy_recursive(ftpClient, listFiles, newPath);
+        }catch(IOException ex) {
+            System.out.println("Oops! Something wrong happened");
+            ex.printStackTrace();
+        }
+    }
+    private static void copy_recursive(FTPClient ftpClient, FTPFile[] listFiles, String newDir)
+    {
+        //ftpClient.enterLocalPassiveMode();
+        try {
+            if(listFiles.length == 0) return;
+            for (FTPFile file : listFiles) {
+                //String newPath = newDir + "/" + file.getName();
+                if (file.isDirectory()) {
+                    if(file.getName().equals(".")|| file.getName().equals(".."))
+                        continue;
+                    String newPath = newDir + "/" + file.getName();
+
+                    boolean success = ftpClient.makeDirectory(newPath);
+                    show_Message_fromServer(ftpClient);
+                    if (success) {
+                        System.out.println("Successfully created directory: " + newPath);
+                    } else {
+                        System.out.println("Failed to create directory. See server's reply.");
+                    }
+                    FTPFile[] getListFiles = ftpClient.listDirectories(file.getName());
+                    copy_recursive(ftpClient, getListFiles, newPath);
+                }
+                else{
+                    //get_file_fromServer(ftpClient, file.getName());
+                    //put_file_toServer(ftpClient, file.getName(), newDir);
+                    get_file_fromServer(ftpClient, newDir + file.getName());
+                    put_file_toServer(ftpClient, file.getName(), newDir);
+                }
+            }
+        }catch(IOException ex) {
+                System.out.println("Oops! Something wrong happened");
+                ex.printStackTrace();
+            }
+
+    }
+
+    private static void get_file_fromServer(FTPClient ftpClient, String remotePath){
+        //ftpClient.enterLocalPassiveMode();
         try{
             String[] names = ftpClient.listNames(remotePath);
             if (names.length == 1) { //check file exists
@@ -225,6 +292,7 @@ public class App {
 
                 OutputStream local = new FileOutputStream(localPath);
                 ftpClient.retrieveFile(remotePath, local);
+
                 local.close();
                 System.out.print("saved to " + localPath);
             } else {
@@ -235,6 +303,7 @@ public class App {
         }
         System.out.println("\n");
     }
+
 
     private static void put_file_toServer(FTPClient ftpClient, String localPath, String remotePath){
         ftpClient.enterLocalPassiveMode();
