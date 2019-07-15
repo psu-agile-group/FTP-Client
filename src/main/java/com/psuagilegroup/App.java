@@ -30,6 +30,7 @@ public class App {
         commands.put("ls", new lsCommand(ftpClient));
         commands.put("rls", new rlsCommand(ftpClient));
         commands.put("rrn", new rrnCommand(ftpClient));
+        commands.put("rn", new rnCommand(ftpClient));
         commands.put("mkdir", new mkdirCommand(ftpClient));
         commands.put("put", new putCommand(ftpClient));
 
@@ -45,16 +46,6 @@ public class App {
                 // Clear the output after printing
                 currentSession.output = "";
                 continue;
-            }else if(lineSplit[0].equals("rn")) {
-                //TODO
-                if (lineSplit.length != 3) {
-                    System.out.println("The format for renaming the file: 'rn old_file_name new_file_name'");
-                }
-                else {
-                    String old = lineSplit[1];
-                    String new_file = lineSplit[2];
-                    rename_file_local(old, new_file);
-                }
             }else if(command.equalsIgnoreCase("exit")||command.equalsIgnoreCase("quit"))  {
                 System.out.println("Goodbye");
                 System.exit(0);
@@ -78,21 +69,6 @@ public class App {
             System.out.println("Oops! Something wrong happened: " + e);
         }
         return currentSession;
-    }
-
-    private static void rename_file_local (String old_name, String new_name) throws IOException {
-
-        //  System.out.println(System.getProperty("user.dir") + "\\" + old_name +": ");
-        File old_file = new File(old_name);
-        File new_file = new File(new_name);
-
-        boolean return_value = old_file.renameTo(new_file);
-        if (return_value){
-            System.out.println("Locally, " + old_name + " was successfully renamed to: " + new_name);
-        }
-        else {
-            System.out.println("Oop, something is wrong");
-        }
     }
 
 
