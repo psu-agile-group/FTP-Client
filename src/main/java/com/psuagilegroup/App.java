@@ -25,8 +25,8 @@ public class App {
         String command;
 
         HashMap<String, Command> commands = new HashMap<>();
-        commands.put("logout", new logoutCommand(ftpClient));
         commands.put("", new emptyCommand(ftpClient));
+        commands.put("logout", new logoutCommand(ftpClient));
         commands.put("get", new getCommand(ftpClient));
         commands.put("cd", new cdCommand(ftpClient));
         commands.put("ls", new lsCommand(ftpClient));
