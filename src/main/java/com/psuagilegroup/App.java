@@ -29,6 +29,7 @@ public class App {
         commands.put("", new emptyCommand(ftpClient));
         commands.put("get", new getCommand(ftpClient));
         commands.put("cd", new cdCommand(ftpClient));
+        commands.put("ls", new lsCommand(ftpClient));
 
         while (true) {
             System.out.print("FTP Shell:" + currentSession.remote_directory + " >> ");
@@ -66,15 +67,6 @@ public class App {
                         for (int i = 1; i < lineSplit.length; ++i) {
                             list_files_fromServer(ftpClient, lineSplit[i]);
                         }
-                    }
-                }
-
-            }else if(lineSplit[0].equals("ls")) {
-                if(lineSplit.length==1) {
-                    list_files_fromLocal("");
-                } else {
-                    for (int i = 1; i < lineSplit.length; ++i) {
-                        list_files_fromLocal(lineSplit[i]);
                     }
                 }
 
@@ -152,22 +144,6 @@ public class App {
             }
         }catch (IOException e) {
             System.out.println("Oops! Something wrong happened: " + e);
-        }
-        System.out.println("\n");
-    }
-
-    private static void list_files_fromLocal(String localPath){
-        System.out.println(System.getProperty("user.dir") + "\\" + localPath+": ");
-        File localDir = new File(System.getProperty("user.dir") + "/" + localPath);
-        File[] listFiles = localDir.listFiles();
-        if(listFiles !=null) {
-            for (File file : listFiles) {
-                if(file.isDirectory()) {
-                    System.out.print(file.getName() + "/\t");
-                }else {
-                    System.out.print(file.getName() + "\t");
-                }
-            }
         }
         System.out.println("\n");
     }
