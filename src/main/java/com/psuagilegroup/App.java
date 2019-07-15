@@ -1,11 +1,9 @@
 package com.psuagilegroup;
 import java.io.*;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
 public class App {
@@ -32,6 +30,7 @@ public class App {
         commands.put("ls", new lsCommand(ftpClient));
         commands.put("rls", new rlsCommand(ftpClient));
         commands.put("mkdir", new mkdirCommand(ftpClient));
+        commands.put("put", new putCommand(ftpClient));
 
         while (true) {
             System.out.print("FTP Shell:" + currentSession.remote_directory + " >> ");
@@ -45,14 +44,6 @@ public class App {
                 // Clear the output after printing
                 currentSession.output = "";
                 continue;
-            }else if(lineSplit[0].equals("put")) {
-                if (lineSplit.length != 3) {
-                    //print_usage("put");
-                    System.out.println("put: missing file operand\nUsage: put [local_file] [remote_file]\n");
-                    continue;
-                }
-                put_file_toServer(ftpClient, lineSplit[1], lineSplit[2]);
-
             }else if(lineSplit[0].equals("rrn")) {
                 //TODO
                 if (lineSplit.length != 3) {
@@ -97,43 +88,6 @@ public class App {
         }
         return currentSession;
     }
-    private static void put_file_toServer(FTPClient ftpClient, String localPath, String remotePath){
-        ftpClient.enterLocalPassiveMode();
-        try{
-            // check local file exists
-            File inFile = new File(localPath);
-            if (inFile.exists() == false) {
-                System.out.println("file does not exist!");
-                return;
-            }
-
-            // ask if overwrite
-            String[] names = ftpClient.listNames(remotePath);
-            if (names.length == 1) { //check file exists
-                BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
-                System.out.println("file exists, overwrite? ('y' to continue)");
-                String cmd = console.readLine();
-                if (cmd.charAt(0) != 'y'){
-                    System.out.println("uploading is cancelled.");
-                    return;
-                }
-            }
-
-            // upload it
-            InputStream input = new FileInputStream(inFile);
-            boolean sucess = ftpClient.storeFile(remotePath, input);
-            if (sucess) {
-                System.out.print("\"" + remotePath + "\"" + " is uploaded ok.");
-            } else {
-                System.out.print("\"" + remotePath + "\"" + " is uploaded failed.");
-            }
-
-        }catch (IOException e) {
-            System.out.println("Oops! Something wrong happened: " + e);
-        }
-        System.out.println("\n");
-    }
-
     private static void rename_file_server (FTPClient ftpClient, String old_name, String new_name) throws IOException {
         String oldFile = old_name;
         String newFile = new_name;
