@@ -31,6 +31,7 @@ public class App {
         commands.put("cd", new cdCommand(ftpClient));
         commands.put("ls", new lsCommand(ftpClient));
         commands.put("rls", new rlsCommand(ftpClient));
+        commands.put("mkdir", new mkdirCommand(ftpClient));
 
         while (true) {
             System.out.print("FTP Shell:" + currentSession.remote_directory + " >> ");
@@ -52,8 +53,6 @@ public class App {
                 }
                 put_file_toServer(ftpClient, lineSplit[1], lineSplit[2]);
 
-            }else if (lineSplit[0].equals("mkdir")){
-                create_dir_on_server(ftpClient, command);
             }else if(lineSplit[0].equals("rrn")) {
                 //TODO
                 if (lineSplit.length != 3) {
@@ -98,35 +97,6 @@ public class App {
         }
         return currentSession;
     }
-    private static void create_dir_on_server(FTPClient ftpClient, String lineSplit)
-    {
-        ftpClient.enterLocalActiveMode();
-        boolean flag = false;
-        try {
-            flag = ftpClient.changeWorkingDirectory("/htdocs");
-            show_Message_fromServer(ftpClient);
-            if(flag)
-                System.out.println("hit");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            String dirToCreate = lineSplit;
-            boolean success = ftpClient.makeDirectory(dirToCreate);
-            show_Message_fromServer(ftpClient);
-            if (success) {
-                System.out.println("Successfully created directory: " + dirToCreate);
-            } else {
-                System.out.println("Failed to create directory. See server's reply.");
-            }
-        } catch (IOException ex) {
-            System.out.println("Oops! Something wrong happened");
-            ex.printStackTrace();
-        }
-    }
-
-
     private static void put_file_toServer(FTPClient ftpClient, String localPath, String remotePath){
         ftpClient.enterLocalPassiveMode();
         try{
