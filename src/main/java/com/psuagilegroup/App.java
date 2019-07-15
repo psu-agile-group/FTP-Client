@@ -30,6 +30,7 @@ public class App {
         commands.put("get", new getCommand(ftpClient));
         commands.put("cd", new cdCommand(ftpClient));
         commands.put("ls", new lsCommand(ftpClient));
+        commands.put("rls", new rlsCommand(ftpClient));
 
         while (true) {
             System.out.print("FTP Shell:" + currentSession.remote_directory + " >> ");
@@ -50,25 +51,6 @@ public class App {
                     continue;
                 }
                 put_file_toServer(ftpClient, lineSplit[1], lineSplit[2]);
-
-            }else if(lineSplit[0].equals("rls")) {
-                if(lineSplit.length==1) {
-                    list_files_fromServer(ftpClient, "");
-                } else {
-                    if(lineSplit[1].equals("-l")) {
-                        if(lineSplit.length==2) {
-                            long_list_files_fromServer(ftpClient, "");
-                        } else {
-                            for (int i = 2; i < lineSplit.length; ++i) {
-                                long_list_files_fromServer(ftpClient, lineSplit[i]);
-                            }
-                        }
-                    } else {
-                        for (int i = 1; i < lineSplit.length; ++i) {
-                            list_files_fromServer(ftpClient, lineSplit[i]);
-                        }
-                    }
-                }
 
             }else if (lineSplit[0].equals("mkdir")){
                 create_dir_on_server(ftpClient, command);
@@ -116,38 +98,6 @@ public class App {
         }
         return currentSession;
     }
-    private static void list_files_fromServer(FTPClient ftpClient, String remotePath){
-        ftpClient.enterLocalPassiveMode();
-        try{
-            FTPFile[] listFiles = ftpClient.listFiles(remotePath);
-            if (listFiles != null) {
-                for (FTPFile file : listFiles) {
-                    if(file.isDirectory()) {
-                        System.out.print(file.getName() + "/\t");
-                    }else {
-                        System.out.print(file.getName() + "\t");
-                    }
-                }
-            }
-        }catch (IOException e) {
-            System.out.println("Oops! Something wrong happened: " + e);
-        }
-        System.out.println("\n");
-    }
-
-    private static void long_list_files_fromServer(FTPClient ftpClient, String remotePath){
-        ftpClient.enterLocalPassiveMode();
-        try{
-            FTPFile[] listFiles = ftpClient.listDirectories(remotePath);
-            for (FTPFile file : listFiles) {
-                System.out.println(file);
-            }
-        }catch (IOException e) {
-            System.out.println("Oops! Something wrong happened: " + e);
-        }
-        System.out.println("\n");
-    }
-
     private static void create_dir_on_server(FTPClient ftpClient, String lineSplit)
     {
         ftpClient.enterLocalActiveMode();
