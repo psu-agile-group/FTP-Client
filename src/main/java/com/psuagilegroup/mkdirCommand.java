@@ -22,7 +22,7 @@ public class mkdirCommand extends Command {
         return currentSession;
     }
 
-    private  void create_dir_on_server( String lineSplit)
+    private  void create_dir_on_server(String lineSplit)
     {
         ftpClient.enterLocalActiveMode();
 
