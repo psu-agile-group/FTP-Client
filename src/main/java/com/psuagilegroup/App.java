@@ -79,7 +79,15 @@ public class App {
         int port = Integer.parseInt(args[1]); //21;
         String user = args[2];//"anonymous";
         String pass = args[3]; //"me@nowhere.com";
+
+        connectInfo save = new connectInfo(server, port, user, pass);
+        try {
+            save.saveInfo();
+        }catch (IOException ex){
+            System.out.println(ex);
+        }
         FTPClient ftpClient = new FTPClient();
+
 
         try {
             ftpClient.connect(server, port);
