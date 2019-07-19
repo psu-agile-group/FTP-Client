@@ -31,7 +31,7 @@ public class connectInfo {
 
             bw.write(this.server);
             bw.newLine();
-            bw.write(this.port);
+            bw.write(Integer.toString(this.port));
             bw.newLine();
             bw.write(this.user);
             bw.newLine();
