@@ -20,7 +20,7 @@ public class loginCommand extends Command{
         connectInfo save = currentSession.save;
         try {
             ftpClient.connect(save.server, save.port);
-            //show_Message_fromServer(ftpClient);
+            show_Message_fromServer();
             int replyCode = ftpClient.getReplyCode();
 
             // FTPReply stores a set of constants for FTP reply codes.
@@ -35,7 +35,7 @@ public class loginCommand extends Command{
             } else {
                 System.out.println("LOGGED IN SERVER");
             }
-            System.out.println();
+            //System.out.println();
 
 
         } catch (IOException e) {
