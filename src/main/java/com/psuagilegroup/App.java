@@ -82,24 +82,7 @@ public class App {
 
 
         try {
-//            ftpClient.connect(save.server, save.port);
-//            show_Message_fromServer(ftpClient);
-//            int replyCode = ftpClient.getReplyCode();
-
-//            // FTPReply stores a set of constants for FTP reply codes.
-//            if (!FTPReply.isPositiveCompletion(replyCode)) {
-//                System.out.println("Operation failed. Server reply code: " + replyCode);
-//                return;
-//            }
-//            boolean success = ftpClient.login(save.user, save.pass); // login method in the library
-//            show_Message_fromServer(ftpClient); // show messg from the server after log in.
-//            if (!success) {
-//                System.out.println("Could not login to the server");
-//            } else {
-//                System.out.println("LOGGED IN SERVER");
-//            }
             System.out.println();
-
             shell(ftpClient,save);
 
         } catch (IOException e) {
