@@ -18,6 +18,7 @@ public class loginCommand extends Command{
     public FTPSession run(  FTPSession currentSession, String[] args )
     {
         connectInfo save = currentSession.save;
+
         try {
             ftpClient.connect(save.server, save.port);
             show_Message_fromServer();
@@ -29,7 +30,7 @@ public class loginCommand extends Command{
                 return currentSession;
             }
             boolean success = ftpClient.login(save.user, save.pass); // login method in the library
-            //show_Message_fromServer(ftpClient); // show messg from the server after log in.
+            show_Message_fromServer(); // show messg from the server after log in.
             if (!success) {
                 System.out.println("Could not login to the server");
             } else {
@@ -39,7 +40,7 @@ public class loginCommand extends Command{
 
 
         } catch (IOException e) {
-            System.out.println("Oops! Something wrong happened");
+            System.out.println("Oops! Something wrong happened connecting");
             e.printStackTrace();
         }
 
@@ -48,6 +49,17 @@ public class loginCommand extends Command{
             currentSession.remote_directory = ftpClient.printWorkingDirectory();
         }catch (IOException ex){
             System.out.println(ex);
+        }
+        initSession(currentSession);
+        return currentSession;
+    }
+
+    private FTPSession initSession(FTPSession currentSession ){
+        try {
+            currentSession.remote_directory = ftpClient.printWorkingDirectory();
+            currentSession.local_directory = new java.io.File(".").getCanonicalPath();
+        }catch(java.io.IOException e) {
+            System.out.println("Oops! Something wrong happened: " + e);
         }
         return currentSession;
     }
