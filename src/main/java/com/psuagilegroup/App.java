@@ -34,6 +34,7 @@ public class App {
         commands.put("mkdir",  new mkdirCommand(ftpClient));
         commands.put("put",    new putCommand(ftpClient));
         commands.put("rmdir",    new rmdirCommand(ftpClient));
+        commands.put("rrm",    new rrmCommand(ftpClient));
 
         while (true) {
             System.out.print("FTP Shell:" + currentSession.remote_directory + " >> ");
