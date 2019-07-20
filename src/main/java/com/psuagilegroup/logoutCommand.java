@@ -11,7 +11,7 @@ public class logoutCommand extends Command
     }
     @Override
     public String help(){
-        return "logout\tLogs out of server and exits program.";
+        return "logout\tLogs out of server.";
     }
     @Override
     public FTPSession run(  FTPSession currentSession, String[] args )
@@ -23,7 +23,7 @@ public class logoutCommand extends Command
             System.out.println("Exception caught, not handled");
         }
         System.out.println("Goodbye");
-        System.exit(0);
+        //System.exit(0);
 
         currentSession.local_directory = "";
         currentSession.remote_directory = "";
