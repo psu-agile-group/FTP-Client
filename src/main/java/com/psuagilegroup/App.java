@@ -37,6 +37,7 @@ public class App {
         commands.put("put", new putCommand(ftpClient));
         commands.put("rmdir", new rmdirCommand(ftpClient));
         commands.put("login", new loginCommand(ftpClient));
+        commands.put("rrm", new rrmCommand(ftpClient));
 
         commands.get("login").run(currentSession, new String[0]);
         while (true) {
