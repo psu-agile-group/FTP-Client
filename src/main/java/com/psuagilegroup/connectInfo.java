@@ -2,8 +2,10 @@ package com.psuagilegroup;
 
 import org.apache.commons.net.ftp.FTPClient;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collection;
 
@@ -51,6 +53,23 @@ public class connectInfo {
         }catch(IOException EX){
             //throw new IOException("Error to write to the file.");
             System.out.println(EX);
+        }
+    }
+
+    public void readInfo(){
+        BufferedReader br = null;
+        FileReader fr = null;
+        try {
+            fr = new FileReader(".FTPClient");
+            br = new BufferedReader(fr);
+
+            this.server = br.readLine();
+            this.port = Integer.parseInt(br.readLine());
+            this.user = br.readLine();
+            this.pass = br.readLine();
+            br.close();
+        }catch(IOException ex) {
+            System.out.println(ex);
         }
     }
 }
