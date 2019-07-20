@@ -16,8 +16,9 @@ public class App {
             }
         }
     }
-    private static void shell(FTPClient ftpClient) throws IOException {
+    private static void shell(FTPClient ftpClient, connectInfo save) throws IOException {
         FTPSession currentSession = initSession(ftpClient);
+        currentSession.save = save;
 
         BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
         String command;
@@ -33,7 +34,8 @@ public class App {
         commands.put("rn",     new rnCommand(ftpClient));
         commands.put("mkdir",  new mkdirCommand(ftpClient));
         commands.put("put",    new putCommand(ftpClient));
-        commands.put("rmdir",    new rmdirCommand(ftpClient));
+        commands.put("rmdir",  new rmdirCommand(ftpClient));
+        commands.put("login",  new loginCommand(ftpClient));
 
         while (true) {
             System.out.print("FTP Shell:" + currentSession.remote_directory + " >> ");
@@ -108,7 +110,7 @@ public class App {
             }
             System.out.println();
 
-            shell(ftpClient);
+            shell(ftpClient,save);
 
         } catch (IOException e) {
             System.out.println("Oops! Something wrong happened");
