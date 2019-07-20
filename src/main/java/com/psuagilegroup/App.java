@@ -75,22 +75,22 @@ public class App {
     public static void main(String[] args) {
         // Variable from the command line argument
         // ftpupload.net 21 epiz_24139835 OkmvEHWbl4HFJ8a
-        String server = args[0];//"193.219.28.2";
-        int port = Integer.parseInt(args[1]); //21;
-        String user = args[2];//"anonymous";
-        String pass = args[3]; //"me@nowhere.com";
-
-        connectInfo save = new connectInfo(server, port, user, pass);
-        try {
-            save.saveInfo();
-        }catch (IOException ex){
-            System.out.println(ex);
+        connectInfo save = new connectInfo();
+        if( args.length < 4 ){
+             save.readInfo();
+        }else {
+            save.saveInfo(args[0], Integer.parseInt(args[1]), args[2], args[3]);
+            try {
+                save.saveInfo();
+            } catch (IOException ex) {
+                System.out.println(ex);
+            }
         }
         FTPClient ftpClient = new FTPClient();
 
 
         try {
-            ftpClient.connect(server, port);
+            ftpClient.connect(save.server, save.port);
             show_Message_fromServer(ftpClient);
             int replyCode = ftpClient.getReplyCode();
 
@@ -99,7 +99,7 @@ public class App {
                 System.out.println("Operation failed. Server reply code: " + replyCode);
                 return;
             }
-            boolean success = ftpClient.login(user, pass); // login method in the library
+            boolean success = ftpClient.login(save.user, save.pass); // login method in the library
             show_Message_fromServer(ftpClient); // show messg from the server after log in.
             if (!success) {
                 System.out.println("Could not login to the server");
