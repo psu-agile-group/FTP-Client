@@ -5,4 +5,6 @@ public class FTPSession {
     String remote_directory="";
 
     String output="";
+
+    connectInfo save;
 }
