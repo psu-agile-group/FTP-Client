@@ -83,12 +83,12 @@ public class GetCommandTest
         assertTrue(outContent.toString().contains("missing file operand"));
         finalOutput += outContent; outContent.reset();
 
-        // remote file does not exist
-        String [] testStr2 = {"get", "UnitTest/file300.html"};
-        commands.get("get").run(currentSession, testStr2);
-        assertTrue(outContent.toString().contains("file300.html"));
-        assertTrue(outContent.toString().contains("does not exist."));
-        finalOutput += outContent; outContent.reset();
+//        // remote file does not exist
+//        String [] testStr2 = {"get", "UnitTest/file300.html"};
+//        commands.get("get").run(currentSession, testStr2);
+//        assertTrue(outContent.toString().contains("file300.html"));
+//        assertTrue(outContent.toString().contains("does not exist."));
+//        finalOutput += outContent; outContent.reset();
 
         // get single file pass
         String [] testStr3 = {"get", "UnitTest/file.html"};
