@@ -22,7 +22,7 @@ public class getCommand extends Command
     public FTPSession run( FTPSession currentSession, String[] lineSplit )
     {
 
-        if (lineSplit.length < 2) {
+        if (lineSplit.length != 2) {
             //print_usage("get");
             System.out.println("get: missing file operand\nUsage: get [filename]\n");
         }else {
