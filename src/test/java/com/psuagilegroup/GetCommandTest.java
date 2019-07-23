@@ -86,7 +86,8 @@ public class GetCommandTest
         // remote file does not exist
         String [] testStr2 = {"get", "UnitTest/file300.html"};
         commands.get("get").run(currentSession, testStr2);
-        assertTrue(outContent.toString().contains("\"UnitTest/file300.html\" does not exist."));
+        assertTrue(outContent.toString().contains("file300.html"));
+        assertTrue(outContent.toString().contains("does not exist."));
         finalOutput += outContent; outContent.reset();
 
         // get single file pass
