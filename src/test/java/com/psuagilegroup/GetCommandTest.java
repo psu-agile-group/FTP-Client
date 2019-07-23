@@ -1,35 +1,35 @@
 package com.psuagilegroup;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Test;
+import org.junit.Before;
+import org.junit.After;
+import static org.junit.Assert.*;
 
 import org.apache.commons.net.ftp.FTPClient;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
-import java.io.ByteArrayInputStream;
 
 /**
  * Unit test for simple GetCommand.
  */
+@RunWith(JUnit4.class)
 public class GetCommandTest
-        extends TestCase
 {
-    FTPClient ftpClient;
-    FTPSession currentSession;
-    HashMap<String, Command> commands;
+    private FTPClient ftpClient;
+    private FTPSession currentSession;
+    private HashMap<String, Command> commands;
 
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public GetCommandTest( String testName )
-    {
-        super( testName );
+    private String finaOutString;
+    private String testString[];
+    private PrintStream originalOut;
+    private ByteArrayOutputStream outContent;
 
+    @Before
+    public void init() {
         // init ftpClient
         ftpClient = new FTPClient();
 
@@ -40,69 +40,54 @@ public class GetCommandTest
         // init useful commands
         commands = new HashMap<>();
         commands.put("login", new loginCommand(ftpClient));
-        commands.put("logout", new logoutCommand(ftpClient));
         commands.put("cd", new cdCommand(ftpClient));
-        commands.put("ls", new lsCommand(ftpClient));
-        commands.put("rls", new rlsCommand(ftpClient));
         // my command to test
         commands.put("get", new getCommand(ftpClient));
 
         // login before test
         commands.get("login").run(currentSession, new String[0]);
-        String [] testStr = {"cd", "htdocs"};
-        commands.get("cd").run(currentSession, testStr);
+        testString = new String[]{"cd", "htdocs"};
+        commands.get("cd").run(currentSession, testString);
+
+        // make sure cd to htdocs works
         assertEquals("", currentSession.output);
 
+        originalOut = System.out;
+        outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
+
+        finaOutString = "";
     }
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( GetCommandTest.class );
+    @After
+    public void cleanup() {
+        // optionally, reset System.in to its original
+        System.setOut(originalOut);
+        System.out.println(finaOutString);
     }
 
-    /**
-     * Rigourous Test :-)
-     */
+    @Test
     public void testGetCommand()
     {
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-        PrintStream originalOut = System.out;
-        PrintStream originalErr = System.err;
-        System.setOut(new PrintStream(outContent));
-        System.setErr(new PrintStream(errContent));
-        String finalOutput = "";
-
-
         // test command argument list
-        String [] testStr1 = {"get", "UnitTest/file1.html", "UnitTest"};
-        commands.get("get").run(currentSession, testStr1);
+        testString = new String[]{"get", "UnitTest/file1.html", "UnitTest"};
+        commands.get("get").run(currentSession, testString);
         assertTrue(outContent.toString().contains("missing file operand"));
-        finalOutput += outContent; outContent.reset();
+        finaOutString += outContent;
+        outContent.reset();
 
         // remote file does not exist
-        String [] testStr2 = {"get", "UnitTest/file300.html"};
-        commands.get("get").run(currentSession, testStr2);
-        System.setOut(originalOut);
-        System.out.println(outContent.toString());
-        System.setOut(new PrintStream(outContent));
-        assertTrue(outContent.toString().contains("file300.html"));
-        assertTrue(outContent.toString().contains("does not exist."));
-        finalOutput += outContent; outContent.reset();
+        testString = new String[]{"get", "UnitTest/file300.html"};
+        commands.get("get").run(currentSession, testString);
+        assertTrue(outContent.toString().contains("\"UnitTest/file300.html\" does not exist."));
+        finaOutString += outContent;
+        outContent.reset();
 
         // get single file pass
-        String [] testStr3 = {"get", "UnitTest/file.html"};
-        commands.get("get").run(currentSession, testStr3);
+        testString = new String[]{"get", "UnitTest/file.html"};
+        commands.get("get").run(currentSession, testString);
         assertTrue(outContent.toString().contains("saved to file.html"));
-        finalOutput += outContent; outContent.reset();
-
-        // optionally, reset System.in to its original
-        System.setIn(System.in);
-        System.setOut(originalOut);
-        System.setErr(originalErr);
-        System.out.println(finalOutput);
+        finaOutString += outContent;
+        outContent.reset();
     }
 }
