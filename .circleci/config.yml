@@ -16,9 +16,10 @@ jobs:
           paths:
             - ~/.m2
           key: ftpclient-{{ checksum "pom.xml" }}
-      # - run: mvn clean install -U
-      # - run: mvn package
+      - run: mvn clean install -U
+      - run: mvn package
+      - run: mvn test
       - store_test_results:
           path: target/surefire-reports
       - store_artifacts:
-          path: target/ftpclient-0.0.1-SNAPSHOT.jar
+          path: target/
