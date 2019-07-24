@@ -32,7 +32,7 @@ public class loginCommand extends Command{
             boolean success = ftpClient.login(save.user, save.pass); // login method in the library
             show_Message_fromServer(); // show messg from the server after log in.
             if (!success) {
-                currentSession.output = "Could not login to the server";
+                currentSession.output = "COULD NOT LOGIN TO SERVER";
             } else {
                 currentSession.output = "LOGGED INTO SERVER";
             }

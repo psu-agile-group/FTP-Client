@@ -45,21 +45,39 @@ public class LoginTest {
         session.local_directory = "";
         session.save = save;
 
-        // Setup Mocked Server calls
+        // Setup Mocked Server calls that are the same
         doNothing().when(fc).connect(save.server, save.port);
-        when(fc.login(save.user, save.pass)).thenReturn(true);
-        when(fc.getReplyCode()).thenReturn(221);
         when(fc.getReplyStrings()).thenReturn(new String[0]);
         when(fc.printWorkingDirectory()).thenReturn("");
+        when(fc.getReplyCode()).thenReturn(221);
     }
 
 
     @Test
-    public void loginTest(){
+    public void loginTest() throws IOException{
+        // Setup Mocks
+        when(fc.login(save.user, save.pass)).thenReturn(true);
+
+        // Run the command
         command.run(session, new String[0]);
+
         // Test that this worked
         Assert.assertEquals("", session.remote_directory);
         Assert.assertEquals("LOGGED INTO SERVER", session.output);
+        Assert.assertTrue(new ReflectionEquals(new connectInfo("127.0.0.1", 21, "mocuser", "mocpass")).matches(save) );
+    }
+
+    @Test
+    public void loginTestFail() throws IOException{
+        // Setup Mocks
+        when(fc.login(save.user, save.pass)).thenReturn(false);
+
+        // Run the command
+        command.run(session, new String[0]);
+
+        // Test that this worked
+        Assert.assertEquals("", session.remote_directory);
+        Assert.assertEquals("COULD NOT LOGIN TO SERVER", session.output);
         Assert.assertTrue(new ReflectionEquals(new connectInfo("127.0.0.1", 21, "mocuser", "mocpass")).matches(save) );
     }
 
