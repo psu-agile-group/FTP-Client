@@ -26,31 +26,24 @@ public class loginCommand extends Command{
 
             // FTPReply stores a set of constants for FTP reply codes.
             if (!FTPReply.isPositiveCompletion(replyCode)) {
-                System.out.println("Operation failed. Server reply code: " + replyCode);
+                currentSession.output = "Operation failed. Server reply code: " + replyCode;
                 return currentSession;
             }
             boolean success = ftpClient.login(save.user, save.pass); // login method in the library
             show_Message_fromServer(); // show messg from the server after log in.
             if (!success) {
-                System.out.println("Could not login to the server");
+                currentSession.output = "Could not login to the server";
             } else {
-                System.out.println("LOGGED IN SERVER");
+                currentSession.output = "LOGGED INTO SERVER";
             }
-            //System.out.println();
 
 
         } catch (IOException e) {
-            System.out.println("Oops! Something wrong happened connecting");
+            currentSession.output = "Oops! Something wrong happened connecting";
             e.printStackTrace();
         }
 
-        currentSession.local_directory = "";
-        try {
-            currentSession.remote_directory = ftpClient.printWorkingDirectory();
-        }catch (IOException ex){
-            System.out.println(ex);
-        }
-        initSession(currentSession);
+        currentSession = initSession(currentSession);
         return currentSession;
     }
 
