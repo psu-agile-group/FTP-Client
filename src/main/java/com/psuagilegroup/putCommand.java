@@ -66,7 +66,7 @@ public class putCommand extends Command {
         }
 
         // 3. put files, create folders recursively until all files were uploaded
-        overwrite_files = 0;;
+        overwrite_files = 0;
         ftpClient.enterLocalPassiveMode();
         put_files_toServer(remoteDir, localFiles);
     }
