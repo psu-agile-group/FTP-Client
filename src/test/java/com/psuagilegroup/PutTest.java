@@ -55,19 +55,19 @@ public class PutTest {
     @Test
     public void putTestLocalFileNotExist() throws IOException{
         // Setup Mocks
-        String[] args = new String[]{"put", "UnitTest\\fileNE", "remoteDir"};
+        String[] args = new String[]{"put", "UnitTest/fileNE", "remoteDir"};
         // Run the command
         command.run(session, args);
         // Test it
         System.setOut(sysOut);
         System.out.println(testOut.toString());
-        Assert.assertTrue(testOut.toString().indexOf(" - local: \"UnitTest\\fileNE\" is invalid.") == 0);
+        Assert.assertTrue(testOut.toString().indexOf(" - local: \"UnitTest/fileNE\" is invalid.") == 0);
     }
 
     @Test
     public void putTestRemoteDirNotExist() throws IOException{
         // Setup Mocks
-        String[] args = new String[]{"put", "UnitTest\\file.txt", "remoteDir"};
+        String[] args = new String[]{"put", "UnitTest/file.txt", "remoteDir"};
         when(fc.changeWorkingDirectory(any(String.class))).thenReturn(false);
         // Run the command
         command.run(session, args);
@@ -80,7 +80,7 @@ public class PutTest {
     @Test
     public void putTestFileSuccess() throws IOException{
         // Setup Mocks
-        String[] args = new String[]{"put", "UnitTest\\file.txt", "remoteDir"};
+        String[] args = new String[]{"put", "UnitTest/file.txt", "remoteDir"};
         when(fc.changeWorkingDirectory(any(String.class))).thenReturn(true);
         when(fc.listNames(any(String.class))).thenReturn(new String[]{});
         when(fc.storeFile(any(String.class), any(InputStream.class))).thenReturn(true);
@@ -89,13 +89,13 @@ public class PutTest {
         // Test it
         System.setOut(sysOut);
         System.out.println(testOut.toString());
-        Assert.assertTrue(testOut.toString().indexOf(" - from : [UnitTest\\file.txt] to [remoteDir/file.txt], upload ok.") == 0);
+        Assert.assertTrue(testOut.toString().indexOf(" - from : [UnitTest/file.txt] to [remoteDir/file.txt], upload ok.") == 0);
     }
 
     @Test
     public void putTestFileOverwriteSuccess() throws IOException{
         // Setup Mocks
-        String[] args = new String[]{"put", "UnitTest\\file.txt", "remoteDir"};
+        String[] args = new String[]{"put", "UnitTest/file.txt", "remoteDir"};
         when(fc.changeWorkingDirectory(any(String.class))).thenReturn(true);
         when(fc.listNames(any(String.class))).thenReturn(new String[]{""});
         when(fc.storeFile(any(String.class), any(InputStream.class))).thenReturn(true);
@@ -106,13 +106,13 @@ public class PutTest {
         // Test it
         System.setOut(sysOut);
         System.out.println(testOut.toString());
-        Assert.assertTrue(testOut.toString().contains(" - from : [UnitTest\\file.txt] to [remoteDir/file.txt], upload ok."));
+        Assert.assertTrue(testOut.toString().contains(" - from : [UnitTest/file.txt] to [remoteDir/file.txt], upload ok."));
     }
 
     @Test
     public void putTestFileOverwriteDenied() throws IOException{
         // Setup Mocks
-        String[] args = new String[]{"put", "UnitTest\\file.txt", "remoteDir"};
+        String[] args = new String[]{"put", "UnitTest/file.txt", "remoteDir"};
         when(fc.changeWorkingDirectory(any(String.class))).thenReturn(true);
         when(fc.listNames(any(String.class))).thenReturn(new String[]{""});
         when(fc.storeFile(any(String.class), any(InputStream.class))).thenReturn(true);
@@ -123,13 +123,13 @@ public class PutTest {
         // Test it
         System.setOut(sysOut);
         System.out.println(testOut.toString());
-        Assert.assertTrue(testOut.toString().contains("- uploading [ UnitTest\\file.txt ] is skipped."));
+        Assert.assertTrue(testOut.toString().contains("- uploading [ UnitTest/file.txt ] is skipped."));
     }
 
     @Test
     public void putTestFolderFailed() throws IOException{
         // Setup Mocks
-        String[] args = new String[]{"put", "UnitTest\\folder1", "remoteDir"};
+        String[] args = new String[]{"put", "UnitTest/folder1", "remoteDir"};
         when(fc.changeWorkingDirectory(any(String.class))).thenReturn(true);
         when(fc.makeDirectory(any(String.class))).thenReturn(false);
         when(fc.listNames(any(String.class))).thenReturn(new String[]{});
@@ -145,7 +145,7 @@ public class PutTest {
     @Test
     public void putTestFolderSuccess() throws IOException{
         // Setup Mocks
-        String[] args = new String[]{"put", "UnitTest\\folder1", "remoteDir"};
+        String[] args = new String[]{"put", "UnitTest/folder1", "remoteDir"};
         when(fc.changeWorkingDirectory(any(String.class))).thenReturn(true);
         when(fc.makeDirectory(any(String.class))).thenReturn(true);
         when(fc.listNames(any(String.class))).thenReturn(new String[]{});
@@ -162,7 +162,7 @@ public class PutTest {
     @Test
     public void putTestFolderOverwriteSuccess() throws IOException{
         // Setup Mocks
-        String[] args = new String[]{"put", "UnitTest\\folder1", "remoteDir"};
+        String[] args = new String[]{"put", "UnitTest/folder1", "remoteDir"};
         when(fc.changeWorkingDirectory(any(String.class))).thenReturn(true);
         when(fc.makeDirectory(any(String.class))).thenReturn(true);
         when(fc.listNames(any(String.class))).thenReturn(new String[]{""});
@@ -181,7 +181,7 @@ public class PutTest {
     @Test
     public void putTestFolderOverwriteDenied() throws IOException{
         // Setup Mocks
-        String[] args = new String[]{"put", "UnitTest\\folder1", "remoteDir"};
+        String[] args = new String[]{"put", "UnitTest/folder1", "remoteDir"};
         when(fc.changeWorkingDirectory(any(String.class))).thenReturn(true);
         when(fc.makeDirectory(any(String.class))).thenReturn(true);
         when(fc.listNames(any(String.class))).thenReturn(new String[]{""});
@@ -193,8 +193,8 @@ public class PutTest {
         // Test it
         System.setOut(sysOut);
         System.out.println(testOut.toString());
-        Assert.assertTrue(testOut.toString().contains("- uploading [ UnitTest\\folder1/file1.txt ] is skipped."));
-        Assert.assertTrue(testOut.toString().contains("- uploading [ UnitTest\\folder1/foler2/file2.txt ] is skipped."));
+        Assert.assertTrue(testOut.toString().contains("- uploading [ UnitTest/folder1/file1.txt ] is skipped."));
+        Assert.assertTrue(testOut.toString().contains("- uploading [ UnitTest/folder1/foler2/file2.txt ] is skipped."));
     }
 
 }
