@@ -47,6 +47,8 @@ public class PutTest {
         // Run the command
         command.run(session, args);
         // Test it
+        System.setOut(sysOut);
+        System.out.println(testOut.toString());
         Assert.assertTrue(session.output.indexOf("put: missing file operand") == 0);
     }
 
@@ -57,6 +59,8 @@ public class PutTest {
         // Run the command
         command.run(session, args);
         // Test it
+        System.setOut(sysOut);
+        System.out.println(testOut.toString());
         Assert.assertTrue(testOut.toString().indexOf(" - local: \"UnitTest\\fileNE\" is invalid.") == 0);
     }
 
@@ -68,6 +72,8 @@ public class PutTest {
         // Run the command
         command.run(session, args);
         // Test it
+        System.setOut(sysOut);
+        System.out.println(testOut.toString());
         Assert.assertTrue(testOut.toString().indexOf(" - remote folder: \"remoteDir\" is invalid.") == 0);
     }
 
@@ -81,6 +87,8 @@ public class PutTest {
         // Run the command
         command.run(session, args);
         // Test it
+        System.setOut(sysOut);
+        System.out.println(testOut.toString());
         Assert.assertTrue(testOut.toString().indexOf(" - from : [UnitTest\\file.txt] to [remoteDir/file.txt], upload ok.") == 0);
     }
 
@@ -96,6 +104,8 @@ public class PutTest {
         // Run the command
         command.run(session, args);
         // Test it
+        System.setOut(sysOut);
+        System.out.println(testOut.toString());
         Assert.assertTrue(testOut.toString().contains(" - from : [UnitTest\\file.txt] to [remoteDir/file.txt], upload ok."));
     }
 
@@ -111,6 +121,8 @@ public class PutTest {
         // Run the command
         command.run(session, args);
         // Test it
+        System.setOut(sysOut);
+        System.out.println(testOut.toString());
         Assert.assertTrue(testOut.toString().contains("- uploading [ UnitTest\\file.txt ] is skipped."));
     }
 
@@ -124,6 +136,8 @@ public class PutTest {
         // Run the command
         command.run(session, args);
         // Test it
+        System.setOut(sysOut);
+        System.out.println(testOut.toString());
         Assert.assertTrue(testOut.toString().contains(" to [remoteDir/folder1/file1.txt], upload failed."));
         Assert.assertTrue(testOut.toString().contains(" to [remoteDir/folder1/foler2/file2.txt], upload failed."));
     }
@@ -139,6 +153,8 @@ public class PutTest {
         // Run the command
         command.run(session, args);
         // Test it
+        System.setOut(sysOut);
+        System.out.println(testOut.toString());
         Assert.assertTrue(testOut.toString().contains(" to [remoteDir/folder1/file1.txt], upload ok."));
         Assert.assertTrue(testOut.toString().contains(" to [remoteDir/folder1/foler2/file2.txt], upload ok."));
     }
@@ -156,6 +172,8 @@ public class PutTest {
         // Run the command
         command.run(session, args);
         // Test it
+        System.setOut(sysOut);
+        System.out.println(testOut.toString());
         Assert.assertTrue(testOut.toString().contains(" to [remoteDir/folder1/file1.txt], upload ok."));
         Assert.assertTrue(testOut.toString().contains(" to [remoteDir/folder1/foler2/file2.txt], upload ok."));
     }
@@ -173,6 +191,8 @@ public class PutTest {
         // Run the command
         command.run(session, args);
         // Test it
+        System.setOut(sysOut);
+        System.out.println(testOut.toString());
         Assert.assertTrue(testOut.toString().contains("- uploading [ UnitTest\\folder1/file1.txt ] is skipped."));
         Assert.assertTrue(testOut.toString().contains("- uploading [ UnitTest\\folder1/foler2/file2.txt ] is skipped."));
     }
