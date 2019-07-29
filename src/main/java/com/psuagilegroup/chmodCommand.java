@@ -45,11 +45,24 @@ public class chmodCommand extends Command {
     }
 
     private void change_file_mode_server(String mode, String remotePath) throws IOException {
+        if (remotePath.contains("/")) {
+            String[] pathFile = remotePath.split("/");
+            for (int i = 0; i < pathFile.length - 1; i++) {
+                ftpClient.changeWorkingDirectory(pathFile[i]);
+            }
+            remotePath = pathFile[pathFile.length - 1];
+        }
         ftpClient.sendSiteCommand("chmod " + mode + " " + remotePath);
         show_Message_fromServer();
-        FTPFile[] listFiles = ftpClient.listFiles(remotePath);
+        FTPFile[] listFiles = ftpClient.listFiles();
         for (FTPFile file : listFiles) {
-            System.out.println(file);
+            if (file.getName().equals(remotePath)) {
+                if (file.isFile()) {
+                    System.out.println(file);
+                } else if (file.isDirectory()) {
+                    System.out.println(file + "/");
+                }
+            }
         }
     }
 }
