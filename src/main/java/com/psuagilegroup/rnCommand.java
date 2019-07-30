@@ -40,7 +40,7 @@ public class rnCommand extends Command {
 
         boolean return_value = OLD.renameTo(NEW);
         if (return_value){
-            System.out.println("Locally, " + OLD + " was successfully renamed to: " + NEW);
+            System.out.print("Locally, " + OLD + " was successfully renamed to: " + NEW);
         }
         else {
             System.out.print("Oop, something is wrong");

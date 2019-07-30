@@ -8,18 +8,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import java.io.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import java.io.PrintStream;
+
+
 @RunWith(MockitoJUnitRunner.class)
 
 public class RenameLocalTest {
 
     private PrintStream sysOut;
-    private ByteArrayOutputStream testOut;
-    private ByteArrayInputStream testIn;
+     private ByteArrayOutputStream testOut;
+   private ByteArrayInputStream testIn;
 
     @Mock
     FTPClient fc;
@@ -29,9 +30,9 @@ public class RenameLocalTest {
     Command command = new rnCommand(fc);
 
     @Before
-    public void setup() throws IOException{
+    public void setup(){
         sysOut = System.out;
-        testOut = new ByteArrayOutputStream();
+      testOut = new ByteArrayOutputStream();
         System.setOut(new PrintStream(testOut));
     }
 
@@ -42,15 +43,11 @@ public class RenameLocalTest {
 
 
     @Test
-    public void RENAME_LOCAL_FAILS_TEST() throws IOException{
+    public void RENAME_LOCAL_FAILS_TEST(){
         // Setup Mocks
     //    when(fc.login(save.user, save.pass)).thenReturn(true);
-        String old = "text.txt";
-        String NEW = "text1.txt";
-        String[] args = new String[3];
-        args[0] = "rn";
-        args[1] = old;
-        args[2] = NEW;
+        String args [] = new String[]{"rn", "nofile.txt", "test2.txt"};
+
         // Run the command
         command.run(session, args);
         Assert.assertEquals("Oop, something is wrong",
@@ -58,6 +55,13 @@ public class RenameLocalTest {
 
     }
 
+    @Test
+    public void RENAME_LOCAL_PASS_TEST() throws IOException {
+        String args [] = new String[]{"rn", "test4.txt", "test3.txt"};
 
+        // Run the command
+        command.run(session, args);
+        Assert.assertEquals("Locally, test4.txt was successfully renamed to: test3.txt", testOut.toString());
+    }
 
 }
