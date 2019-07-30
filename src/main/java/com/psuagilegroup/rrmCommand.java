@@ -31,16 +31,6 @@ public class rrmCommand extends Command{
     }
 
     private void delete_file(String file_name) throws IOException{
-        /*
-        FTPClient ftpClient = new FTPClient();
-        boolean deleted = ftpClient.deleteFile(file_name);
-        if(deleted){
-            System.out.println("The file was deleted successfully.");
-        } else {
-            System.out.println("Could not delete the file, it may not exist.");
-        }
-        */
-
         String fileName = file_name;
         if((fileName.charAt(0)) == '/'){
             System.out.println("This is a direct path");
