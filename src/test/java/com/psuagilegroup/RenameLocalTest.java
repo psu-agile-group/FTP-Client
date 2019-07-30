@@ -41,11 +41,21 @@ public class RenameLocalTest {
         System.setOut(sysOut);
     }
 
+    @Test
+    public void NOT_ENOUGH_ARGUMENT_FAIL_TEST() {
+        String args [] = new String[]{"rn","test2.txt"};
+
+        // Run the command
+        command.run(session, args);
+        Assert.assertEquals("The format for renaming the file: 'rn old_file_name new_file_name"
+,session.output);
+
+
+    }
 
     @Test
     public void RENAME_LOCAL_FAILS_TEST(){
         // Setup Mocks
-    //    when(fc.login(save.user, save.pass)).thenReturn(true);
         String args [] = new String[]{"rn", "nofile.txt", "test2.txt"};
 
         // Run the command
@@ -57,11 +67,11 @@ public class RenameLocalTest {
 
     @Test
     public void RENAME_LOCAL_PASS_TEST() throws IOException {
-        String args [] = new String[]{"rn", "test4.txt", "test3.txt"};
+        String args [] = new String[]{"rn", "test3.txt", "test4.txt"};
 
         // Run the command
         command.run(session, args);
-        Assert.assertEquals("Locally, test4.txt was successfully renamed to: test3.txt", testOut.toString());
+        Assert.assertEquals("Locally, test3.txt was successfully renamed to: test4.txt", testOut.toString());
     }
 
 }
