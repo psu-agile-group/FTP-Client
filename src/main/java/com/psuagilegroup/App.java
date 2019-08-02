@@ -4,18 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPReply;
 
 public class App {
-
-    private static void show_Message_fromServer(FTPClient ftpClient) {
-        String[] replies = ftpClient.getReplyStrings();
-        if (replies != null && replies.length > 0) {
-            for (int i = 0; i < replies.length; ++i) {
-                System.out.println("SERVER: " + replies[i]);
-            }
-        }
-    }
 
     private static void shell(FTPClient ftpClient, connectInfo save) throws IOException {
         FTPSession currentSession = new FTPSession();
@@ -38,6 +28,7 @@ public class App {
         commands.put("rmdir", new rmdirCommand(ftpClient));
         commands.put("login", new loginCommand(ftpClient));
         commands.put("rrm", new rrmCommand(ftpClient));
+        commands.put("chmod", new chmodCommand(ftpClient));
 
         commands.get("login").run(currentSession, new String[0]);
         while (true) {
