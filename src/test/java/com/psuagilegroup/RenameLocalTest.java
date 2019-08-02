@@ -8,22 +8,20 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.mockito.runners.MockitoJUnitRunner;
-import java.io.*;
-import java.io.PrintStream;
-import java.nio.file.FileSystemException;
-import  java.nio.file.Files;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 
 @RunWith(MockitoJUnitRunner.class)
 
 public class RenameLocalTest {
 
     private PrintStream sysOut;
-     private ByteArrayOutputStream testOut;
-   private ByteArrayInputStream testIn;
+    private ByteArrayOutputStream testOut;
+    private ByteArrayInputStream testIn;
 
     @Mock
     FTPClient fc;
@@ -32,50 +30,51 @@ public class RenameLocalTest {
     @InjectMocks
     Command command = new rnCommand(fc);
 
+
     @Before
-    public void setup(){
+    public void setup() {
         sysOut = System.out;
-      testOut = new ByteArrayOutputStream();
+        testOut = new ByteArrayOutputStream();
         System.setOut(new PrintStream(testOut));
     }
 
     @After
-    public void cleanup() throws IOException{
+    public void cleanup() throws IOException {
         System.setOut(sysOut);
     }
 
     @Test
     public void NOT_ENOUGH_ARGUMENT_FAIL_TEST() {
-        String args [] = new String[]{"rn","test2.txt"};
+        String args[] = new String[]{"rn", "UnitTest/test2.txt"};
 
         // Run the command
         command.run(session, args);
-        Assert.assertEquals("The format for renaming the file: 'rn old_file_name new_file_name"
-,session.output);
+        Assert.assertEquals("The format for renaming the file: 'rn old_file_name new_file_name", session.output);
     }
 
     @Test
-    public void RENAME_LOCAL_FAILS_TEST(){
+    public void RENAME_LOCAL_FAILS_TEST() {
         // Setup Mocks
-        String args [] = new String[]{"rn", "nofile.txt", "test2.txt"};
+        String args[] = new String[]{"rn", "UnitTest/nofile.txt", "UnitTest/test2.txt"};
 
         // Run the command
         command.run(session, args);
-        Assert.assertEquals("Oop, something is wrong",
-                testOut.toString());
+        Assert.assertEquals("Oop, something is wrong", testOut.toString());
 
     }
 
     @Test
     public void RENAME_LOCAL_PASS_TEST() throws IOException {
-        String args [] = new String[]{"rn", "test4.txt", "test3.txt"};
+        // Setup Mocks
+        String args1[] = new String[]{"rn", "UnitTest/test4.txt", "UnitTest/test3.txt"};
+        String args2[] = new String[]{"rn", "UnitTest/test3.txt", "UnitTest/test4.txt"};
+
         // Run the command
-        command.run(session, args);
-        File filetoRenamed = new File("test3.txt");
-        boolean isRenamed = filetoRenamed.renameTo(new File("test4.txt"));
-        if (!isRenamed) {
-            throw new FileSystemException("test3.txt");
-        }
+        command.run(session, args1);
+        Assert.assertTrue(testOut.toString().contains("successful"));
+
+        command.run(session, args2);
+        Assert.assertTrue(testOut.toString().contains("successful"));
     }
 
 }
