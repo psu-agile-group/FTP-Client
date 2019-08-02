@@ -9,9 +9,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.mockito.runners.MockitoJUnitRunner;
 import java.io.*;
 import java.io.PrintStream;
+import java.nio.file.FileSystemException;
+import  java.nio.file.Files;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -49,8 +52,6 @@ public class RenameLocalTest {
         command.run(session, args);
         Assert.assertEquals("The format for renaming the file: 'rn old_file_name new_file_name"
 ,session.output);
-
-
     }
 
     @Test
@@ -67,11 +68,14 @@ public class RenameLocalTest {
 
     @Test
     public void RENAME_LOCAL_PASS_TEST() throws IOException {
-        String args [] = new String[]{"rn", "test3.txt", "test4.txt"};
-
+        String args [] = new String[]{"rn", "test4.txt", "test3.txt"};
         // Run the command
         command.run(session, args);
-        Assert.assertEquals("Locally, test3.txt was successfully renamed to: test4.txt", testOut.toString());
+        File filetoRenamed = new File("test3.txt");
+        boolean isRenamed = filetoRenamed.renameTo(new File("test4.txt"));
+        if (!isRenamed) {
+            throw new FileSystemException("test3.txt");
+        }
     }
 
 }

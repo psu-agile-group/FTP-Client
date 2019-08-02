@@ -28,7 +28,13 @@ public class rnCommand extends Command {
             try {
                 File OLD = new File(old);
                 File NEW = new File(new_file);
-                rename_file_local(OLD,NEW);
+                boolean check = rename_file_local(OLD,NEW);
+                if (check){
+                    currentSession.output = "True";
+                }
+                else{
+                    currentSession.output = "False";
+                }
             }catch(IOException e){
                 currentSession.output = "Something wicked happened locally.";
             }
@@ -36,14 +42,16 @@ public class rnCommand extends Command {
         return currentSession;
     }
 
-    private void rename_file_local (File OLD, File NEW) throws IOException {
+    private boolean rename_file_local (File OLD, File NEW) throws IOException {
 
         boolean return_value = OLD.renameTo(NEW);
         if (return_value){
             System.out.print("Locally, " + OLD + " was successfully renamed to: " + NEW);
+            return true;
         }
         else {
             System.out.print("Oop, something is wrong");
+            return false;
         }
     }
 
