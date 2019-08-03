@@ -3,6 +3,9 @@ package com.psuagilegroup;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
+import org.apache.commons.net.io.CopyStreamEvent;
+import org.apache.commons.net.io.CopyStreamListener;
+import org.apache.commons.net.io.Util;
 
 import java.io.*;
 import java.util.Arrays;
@@ -136,9 +139,27 @@ public class putCommand extends Command {
         // upload it
         File file = new File(localPath);
         InputStream input = new FileInputStream(file);
-        //ftpClient.setFileTransferMode(FTP.BINARY_FILE_TYPE);
-        System.out.print(" - from : [" + localPath +"] to [" + remotePath + "]");
+
+        // set percentage callback
+        long file_size = file.length();
+        CopyStreamListener listener = new CopyStreamListener() {
+            @Override
+            public void bytesTransferred(CopyStreamEvent copyStreamEvent) {}
+
+            int lastPercent = 0;
+            @Override
+            public void bytesTransferred(long l, int i, long l1) {
+                int percentage = (int)(l * 100 / file_size);
+                if (percentage != lastPercent)
+                    System.out.print(String.format("\b\b\b%02d%%", percentage));
+                lastPercent = percentage;
+            }
+        };
+        ftpClient.setCopyStreamListener(listener);
+
+        //do it
         boolean success = ftpClient.storeFile(remotePath, input);
+        System.out.print(" - from : [" + localPath +"] to [" + remotePath + "]");
         if (success) {
             System.out.println(", upload ok.");
         } else {
