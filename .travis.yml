@@ -1,2 +1,11 @@
 language: java
+sudo: false
+script: mvn clean verify
+after_success:
+  - mvn clean test
+  - mvn jacoco:report
+  - mvn coveralls:report -DrepoToken="${COVERALLS_TOKEN}"
 
+env:
+  global:
+    - secure: ""

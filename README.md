@@ -1,6 +1,7 @@
 # FTP Client
 [![Build Status](https://travis-ci.com/psu-agile-group/FTP-Client.svg?branch=master)](https://travis-ci.com/psu-agile-group/FTP-Client)
 [![CircleCI Status](https://circleci.com/gh/psu-agile-group/FTP-Client.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/psu-agile-group/FTP-Client)
+[![Coverage Status](https://coveralls.io/repos/github/psu-agile-group/FTP-Client/badge.svg?branch=master)](https://coveralls.io/github/psu-agile-group/FTP-Client?branch=master)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/psu-agile-group/FTP-Client/License)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/psu-agile-group/FTP-Client/issues)
 
