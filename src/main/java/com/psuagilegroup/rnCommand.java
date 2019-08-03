@@ -42,11 +42,11 @@ public class rnCommand extends Command {
         return currentSession;
     }
 
-    private boolean rename_file_local (File OLD, File NEW) throws IOException {
+    private boolean rename_file_local (File old_name, File new_name) throws IOException {
 
-        boolean return_value = OLD.renameTo(NEW);
+        boolean return_value = old_name.renameTo(new_name);
         if (return_value){
-            System.out.print("Locally, " + OLD + " was successfully renamed to: " + NEW);
+            System.out.print("Locally, " + old_name + " was successfully renamed to: " + new_name);
             return true;
         }
         else {
