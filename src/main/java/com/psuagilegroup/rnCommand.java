@@ -20,13 +20,21 @@ public class rnCommand extends Command {
     {
         //TODO
         if (lineSplit.length != 3) {
-            System.out.println("The format for renaming the file: 'rn old_file_name new_file_name'");
+            currentSession.output ="The format for renaming the file: 'rn old_file_name new_file_name";
         }
         else {
             String old = lineSplit[1];
             String new_file = lineSplit[2];
             try {
-                rename_file_local(old, new_file);
+                File OLD = new File(old);
+                File NEW = new File(new_file);
+                boolean check = rename_file_local(OLD,NEW);
+                if (check){
+                    currentSession.output = "True";
+                }
+                else{
+                    currentSession.output = "False";
+                }
             }catch(IOException e){
                 currentSession.output = "Something wicked happened locally.";
             }
@@ -34,17 +42,16 @@ public class rnCommand extends Command {
         return currentSession;
     }
 
-    private void rename_file_local (String old_name, String new_name) throws IOException {
+    private boolean rename_file_local (File old_name, File new_name) throws IOException {
 
-        File old_file = new File(old_name);
-        File new_file = new File(new_name);
-
-        boolean return_value = old_file.renameTo(new_file);
+        boolean return_value = old_name.renameTo(new_name);
         if (return_value){
-            System.out.println("Locally, " + old_name + " was successfully renamed to: " + new_name);
+            System.out.print("Locally, " + old_name + " was successfully renamed to: " + new_name);
+            return true;
         }
         else {
-            System.out.println("Oop, something is wrong");
+            System.out.print("Oop, something is wrong");
+            return false;
         }
     }
 
