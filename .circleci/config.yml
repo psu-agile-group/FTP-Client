@@ -21,5 +21,8 @@ jobs:
       - run: mvn test
       - store_test_results:
           path: target/surefire-reports
+      - run: mvn jacoco:report
+      - store_test_results:
+          path: target/jacoc-reports
       - store_artifacts:
           path: target/
