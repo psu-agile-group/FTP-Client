@@ -22,12 +22,12 @@ public class RlsTest {
     private PrintStream sysOut;
     private ByteArrayOutputStream testOut;
     private ByteArrayInputStream testIn;
-    private FTPFile mockFtpDirectory;
-    private FTPFile mockFtpFiles;
 
     @Mock
     FTPClient fc;
     FTPSession session = new FTPSession();
+    FTPFile mockFtpDirectory = new FTPFile();
+    FTPFile mockFtpFiles = new FTPFile();
 
     @InjectMocks
     Command command = new rlsCommand(fc);
@@ -41,12 +41,10 @@ public class RlsTest {
     }
 
     private void mocksetup(){
-        mockFtpDirectory = new FTPFile();
         mockFtpDirectory.setName("htdocs");
         mockFtpDirectory.setType(FTPFile.DIRECTORY_TYPE);
         mockFtpDirectory.setRawListing("drwxr-xr-x   11 24139835   24139835         4096 Jul 31 22:49 htdocs");
 
-        mockFtpFiles = new FTPFile();
         mockFtpFiles.setName("index1.html");
         mockFtpFiles.setType(FTPFile.FILE_TYPE);
         mockFtpFiles.setRawListing("-rw-r--r--    1 0          2                   0 Jul  3 19:42 index.html");
