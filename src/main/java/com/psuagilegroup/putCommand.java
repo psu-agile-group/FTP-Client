@@ -1,38 +1,36 @@
 package com.psuagilegroup;
 
-import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.io.CopyStreamEvent;
 import org.apache.commons.net.io.CopyStreamListener;
-import org.apache.commons.net.io.Util;
 
 import java.io.*;
 import java.util.Arrays;
 
 public class putCommand extends Command {
 
-    public putCommand(FTPClient ftpClient)
-    {
+    static int overwrite_files = 0;
+
+    public putCommand(FTPClient ftpClient) {
         super(ftpClient);
     }
 
     @Override
-    public String help(){
-        return "put\t\tPut file / files / folder to server (relative path).";
+    public String help() {
+        return "put\t\t\tPut file/files/folder to server (relative path).";
     }
+
     @Override
-    public FTPSession run( FTPSession currentSession,  String[] lineSplit )
-    {
+    public FTPSession run(FTPSession currentSession, String[] lineSplit) {
         if (lineSplit.length < 3) {
             currentSession.output = "put: missing file operand\nUsage: put [local_file(s), folder(s), ...] [remote_folder]\n";
 
-        }else {
+        } else {
             String remoteDir = lineSplit[lineSplit.length - 1];
             String[] localPaths = Arrays.copyOfRange(lineSplit, 1, lineSplit.length - 1);
-            try{
+            try {
                 put_files_toServer_wrapper(remoteDir, localPaths);
-            }catch (IOException e) {
+            } catch (IOException e) {
                 currentSession.output = "Exception: " + e.getMessage();
             }
         }
@@ -41,17 +39,16 @@ public class putCommand extends Command {
 
     private boolean check_remote_dir_exists(String remotePath) throws IOException {
         String currentWD = ftpClient.printWorkingDirectory();
-        if (!ftpClient.changeWorkingDirectory(remotePath)){
+        if (!ftpClient.changeWorkingDirectory(remotePath)) {
             return false;
         }
 
-        if (!ftpClient.changeWorkingDirectory(currentWD)){
+        if (!ftpClient.changeWorkingDirectory(currentWD)) {
             throw new IOException("failed to switch remote working directory back.");
         }
         return true;
     }
 
-    static int overwrite_files = 0;
     private void put_files_toServer_wrapper(String remoteDir, String[] localFiles) throws IOException {
         // 1. check local files / folders are valid
         for (String localPath : localFiles) {
@@ -69,7 +66,7 @@ public class putCommand extends Command {
         }
 
         // 3. put files, create folders recursively until all files were uploaded
-        overwrite_files = 0;;
+        overwrite_files = 0;
         ftpClient.enterLocalPassiveMode();
         put_files_toServer(remoteDir, localFiles);
     }
@@ -91,7 +88,7 @@ public class putCommand extends Command {
         }
     }
 
-    private void put_folder_toServer(String localDir, String remoteDir) throws IOException{
+    private void put_folder_toServer(String localDir, String remoteDir) throws IOException {
         File fDir = new File(localDir);
         File[] fList = fDir.listFiles(); // get all file & folders in localDir
         if (fList != null && fList.length > 0) {
@@ -112,7 +109,7 @@ public class putCommand extends Command {
         }
     }
 
-    private void put_file_toServer(String localPath, String remotePath) throws IOException{
+    private void put_file_toServer(String localPath, String remotePath) throws IOException {
         // ask if overwrite
         String[] names = ftpClient.listNames(remotePath);
         if (names.length == 1) { // file exists
@@ -127,9 +124,9 @@ public class putCommand extends Command {
                     System.out.println(" - uploading [ " + localPath + " ] is skipped.");
                     overwrite_files = 2;
                     return;
-                }else if (cmd.toUpperCase().equals("YES")) {
+                } else if (cmd.toUpperCase().equals("YES")) {
                     overwrite_files = 1;
-                }else if (cmd.toUpperCase().equals("N")) {
+                } else if (cmd.toUpperCase().equals("N")) {
                     System.out.println(" - uploading [ " + localPath + " ] is skipped.");
                     return;
                 }//else if (cmd.toUpperCase().equals("Y")) { overwrite_files = 0; }
@@ -143,13 +140,15 @@ public class putCommand extends Command {
         // set percentage callback
         long file_size = file.length();
         CopyStreamListener listener = new CopyStreamListener() {
-            @Override
-            public void bytesTransferred(CopyStreamEvent copyStreamEvent) {}
-
             int lastPercent = 0;
+
+            @Override
+            public void bytesTransferred(CopyStreamEvent copyStreamEvent) {
+            }
+
             @Override
             public void bytesTransferred(long l, int i, long l1) {
-                int percentage = (int)(l * 100 / file_size);
+                int percentage = (int) (l * 100 / file_size);
                 if (percentage != lastPercent)
                     System.out.print(String.format("\b\b\b%02d%%", percentage));
                 lastPercent = percentage;
@@ -159,7 +158,7 @@ public class putCommand extends Command {
 
         //do it
         boolean success = ftpClient.storeFile(remotePath, input);
-        System.out.print(" - from : [" + localPath +"] to [" + remotePath + "]");
+        System.out.print(" - from : [" + localPath + "] to [" + remotePath + "]");
         if (success) {
             System.out.println(", upload ok.");
         } else {

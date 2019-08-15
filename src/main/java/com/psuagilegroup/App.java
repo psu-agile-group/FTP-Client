@@ -1,9 +1,12 @@
 package com.psuagilegroup;
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.net.ftp.FTPClient;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 public class App {
 
@@ -16,19 +19,19 @@ public class App {
 
         HashMap<String, Command> commands = new HashMap<>();
         commands.put("", new emptyCommand(ftpClient));
-        commands.put("logout", new logoutCommand(ftpClient));
-        commands.put("get", new getCommand(ftpClient));
         commands.put("cd", new cdCommand(ftpClient));
+        commands.put("chmod", new chmodCommand(ftpClient));
+        commands.put("get", new getCommand(ftpClient));
+        commands.put("login", new loginCommand(ftpClient));
+        commands.put("logout", new logoutCommand(ftpClient));
         commands.put("ls", new lsCommand(ftpClient));
-        commands.put("rls", new rlsCommand(ftpClient));
-        commands.put("rrn", new rrnCommand(ftpClient));
-        commands.put("rn", new rnCommand(ftpClient));
         commands.put("mkdir", new mkdirCommand(ftpClient));
         commands.put("put", new putCommand(ftpClient));
+        commands.put("rls", new rlsCommand(ftpClient));
         commands.put("rmdir", new rmdirCommand(ftpClient));
-        commands.put("login", new loginCommand(ftpClient));
+        commands.put("rn", new rnCommand(ftpClient));
         commands.put("rrm", new rrmCommand(ftpClient));
-        commands.put("chmod", new chmodCommand(ftpClient));
+        commands.put("rrn", new rrnCommand(ftpClient));
 
         commands.get("login").run(currentSession, new String[0]);
         while (true) {
@@ -60,9 +63,9 @@ public class App {
         // Variable from the command line argument
         // ftpupload.net 21 epiz_24139835 OkmvEHWbl4HFJ8a
         connectInfo save = new connectInfo();
-        if( args.length < 4 ){
-             save.readInfo();
-        }else {
+        if (args.length < 4) {
+            save.readInfo();
+        } else {
             save.saveInfo(args[0], Integer.parseInt(args[1]), args[2], args[3]);
             try {
                 save.saveInfo();
@@ -75,7 +78,7 @@ public class App {
 
         try {
             System.out.println();
-            shell(ftpClient,save);
+            shell(ftpClient, save);
 
         } catch (IOException e) {
             System.out.println("Oops! Something wrong happened here");

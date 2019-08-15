@@ -7,18 +7,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
-import java.io.IOException;
-import java.net.SocketException;
-
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.doThrow;
-
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.io.IOException;
+
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoginTest {
@@ -34,10 +29,10 @@ public class LoginTest {
 
 
     // Setup Mock returns
-    connectInfo save = new connectInfo( "127.0.0.1", 21, "mocuser", "mocpass");
+    connectInfo save = new connectInfo("127.0.0.1", 21, "mocuser", "mocpass");
 
     @Before
-    public void setup() throws IOException{
+    public void setup() throws IOException {
 
         // Setting up some default information
         session.output = "";
@@ -54,7 +49,7 @@ public class LoginTest {
 
 
     @Test
-    public void loginTest() throws IOException{
+    public void loginTest() throws IOException {
         // Setup Mocks
         when(fc.login(save.user, save.pass)).thenReturn(true);
 
@@ -64,11 +59,11 @@ public class LoginTest {
         // Test that this worked
         Assert.assertEquals("", session.remote_directory);
         Assert.assertEquals("LOGGED INTO SERVER", session.output);
-        Assert.assertTrue(new ReflectionEquals(new connectInfo("127.0.0.1", 21, "mocuser", "mocpass")).matches(save) );
+        Assert.assertTrue(new ReflectionEquals(new connectInfo("127.0.0.1", 21, "mocuser", "mocpass")).matches(save));
     }
 
     @Test
-    public void loginTestFail() throws IOException{
+    public void loginTestFail() throws IOException {
         // Setup Mocks
         when(fc.login(save.user, save.pass)).thenReturn(false);
 
@@ -78,7 +73,7 @@ public class LoginTest {
         // Test that this worked
         Assert.assertEquals("", session.remote_directory);
         Assert.assertEquals("COULD NOT LOGIN TO SERVER", session.output);
-        Assert.assertTrue(new ReflectionEquals(new connectInfo("127.0.0.1", 21, "mocuser", "mocpass")).matches(save) );
+        Assert.assertTrue(new ReflectionEquals(new connectInfo("127.0.0.1", 21, "mocuser", "mocpass")).matches(save));
     }
 
 }

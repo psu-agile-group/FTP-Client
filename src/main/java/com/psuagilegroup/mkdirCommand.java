@@ -6,24 +6,22 @@ import java.io.IOException;
 
 public class mkdirCommand extends Command {
 
-    public mkdirCommand(FTPClient ftpClient)
-    {
+    public mkdirCommand(FTPClient ftpClient) {
         super(ftpClient);
     }
 
     @Override
-    public String help(){
-        return "mkdir\tMake directory.";
+    public String help() {
+        return "mkdir\t\tMake directory on server.";
     }
+
     @Override
-    public FTPSession run( FTPSession currentSession,  String[] args )
-    {
+    public FTPSession run(FTPSession currentSession, String[] args) {
         create_dir_on_server(args[1]);
         return currentSession;
     }
 
-    private  void create_dir_on_server(String lineSplit)
-    {
+    private void create_dir_on_server(String lineSplit) {
         ftpClient.enterLocalActiveMode();
 
         try {

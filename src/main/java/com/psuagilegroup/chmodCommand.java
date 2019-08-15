@@ -12,7 +12,7 @@ public class chmodCommand extends Command {
 
     @Override
     public String help() {
-        return "chmod\t\tchange mode.";
+        return "chmod\t\tChanges mode.";
     }
 
     @Override

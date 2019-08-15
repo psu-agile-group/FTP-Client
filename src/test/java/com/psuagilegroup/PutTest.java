@@ -12,36 +12,34 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.*;
 
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PutTest {
+    @Mock
+    FTPClient fc;
+    FTPSession session = new FTPSession();
+    @InjectMocks
+    Command command = new putCommand(fc);
     private PrintStream sysOut;
     private ByteArrayOutputStream testOut;
     private ByteArrayInputStream testIn;
 
-    @Mock
-    FTPClient fc;
-    FTPSession session = new FTPSession();
-
-    @InjectMocks
-    Command command = new putCommand(fc);
-
     @Before
-    public void setup() throws IOException{
+    public void setup() throws IOException {
         sysOut = System.out;
         testOut = new ByteArrayOutputStream();
         System.setOut(new PrintStream(testOut));
     }
 
     @After
-    public void cleanup() throws IOException{
+    public void cleanup() throws IOException {
         System.setOut(sysOut);
     }
 
     @Test
-    public void putTestBadArguments() throws IOException{
+    public void putTestBadArguments() throws IOException {
         // Setup Mocks
         String[] args = new String[]{"put", "file"};
         // Run the command
@@ -51,7 +49,7 @@ public class PutTest {
     }
 
     @Test
-    public void putTestLocalFileNotExist() throws IOException{
+    public void putTestLocalFileNotExist() throws IOException {
         // Setup Mocks
         String[] args = new String[]{"put", "UnitTest/fileNE", "remoteDir"};
         // Run the command
@@ -61,7 +59,7 @@ public class PutTest {
     }
 
     @Test
-    public void putTestRemoteDirNotExist() throws IOException{
+    public void putTestRemoteDirNotExist() throws IOException {
         // Setup Mocks
         String[] args = new String[]{"put", "UnitTest/file.txt", "remoteDir"};
         when(fc.changeWorkingDirectory(any(String.class))).thenReturn(false);
@@ -72,7 +70,7 @@ public class PutTest {
     }
 
     @Test
-    public void putTestFileSuccess() throws IOException{
+    public void putTestFileSuccess() throws IOException {
         // Setup Mocks
         String[] args = new String[]{"put", "UnitTest/file.txt", "remoteDir"};
         when(fc.changeWorkingDirectory(any(String.class))).thenReturn(true);
@@ -85,7 +83,7 @@ public class PutTest {
     }
 
     @Test
-    public void putTestFileOverwriteSuccess() throws IOException{
+    public void putTestFileOverwriteSuccess() throws IOException {
         // Setup Mocks
         String[] args = new String[]{"put", "UnitTest/file.txt", "remoteDir"};
         when(fc.changeWorkingDirectory(any(String.class))).thenReturn(true);
@@ -100,7 +98,7 @@ public class PutTest {
     }
 
     @Test
-    public void putTestFileOverwriteDenied() throws IOException{
+    public void putTestFileOverwriteDenied() throws IOException {
         // Setup Mocks
         String[] args = new String[]{"put", "UnitTest/file.txt", "remoteDir"};
         when(fc.changeWorkingDirectory(any(String.class))).thenReturn(true);
@@ -115,7 +113,7 @@ public class PutTest {
     }
 
     @Test
-    public void putTestFolderFailed() throws IOException{
+    public void putTestFolderFailed() throws IOException {
         // Setup Mocks
         String[] args = new String[]{"put", "UnitTest/folder1", "remoteDir"};
         when(fc.changeWorkingDirectory(any(String.class))).thenReturn(true);
@@ -129,7 +127,7 @@ public class PutTest {
     }
 
     @Test
-    public void putTestFolderSuccess() throws IOException{
+    public void putTestFolderSuccess() throws IOException {
         // Setup Mocks
         String[] args = new String[]{"put", "UnitTest/folder1", "remoteDir"};
         when(fc.changeWorkingDirectory(any(String.class))).thenReturn(true);
@@ -144,7 +142,7 @@ public class PutTest {
     }
 
     @Test
-    public void putTestFolderOverwriteSuccess() throws IOException{
+    public void putTestFolderOverwriteSuccess() throws IOException {
         // Setup Mocks
         String[] args = new String[]{"put", "UnitTest/folder1", "remoteDir"};
         when(fc.changeWorkingDirectory(any(String.class))).thenReturn(true);
@@ -161,7 +159,7 @@ public class PutTest {
     }
 
     @Test
-    public void putTestFolderOverwriteDenied() throws IOException{
+    public void putTestFolderOverwriteDenied() throws IOException {
         // Setup Mocks
         String[] args = new String[]{"put", "UnitTest/folder1", "remoteDir"};
         when(fc.changeWorkingDirectory(any(String.class))).thenReturn(true);

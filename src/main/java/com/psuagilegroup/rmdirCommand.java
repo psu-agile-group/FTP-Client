@@ -12,7 +12,7 @@ public class rmdirCommand extends Command {
 
     @Override
     public String help() {
-        return "rmdir\tRemove directory.";
+        return "rmdir\t\tRemove directory on server.";
     }
 
     @Override

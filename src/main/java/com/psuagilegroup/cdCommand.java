@@ -5,30 +5,30 @@ import org.apache.commons.net.ftp.FTPClient;
 import java.io.IOException;
 
 public class cdCommand extends Command {
-    public cdCommand(FTPClient ftpClient)
-    {
+    public cdCommand(FTPClient ftpClient) {
         super(ftpClient);
     }
 
     @Override
-    public String help(){
-        return "cd\t\tChanges the current directory.";
+    public String help() {
+        return "cd\t\t\tChanges the current directory.";
     }
+
     @Override
-    public FTPSession run( FTPSession currentSession, String[] lineSplit ){
+    public FTPSession run(FTPSession currentSession, String[] lineSplit) {
 
         //FIXME
         if (lineSplit.length == 2) {
             change_working_directory_on_server(currentSession, lineSplit[1]);
-        }else {
+        } else {
             currentSession.output = "Error: Invalid Argument";
         }
         return currentSession;
     }
 
-    private void change_working_directory_on_server(FTPSession currentSession, String remotePath){
+    private void change_working_directory_on_server(FTPSession currentSession, String remotePath) {
         try {
-            if(remotePath == ".."){
+            if (remotePath == "..") {
                 ftpClient.changeToParentDirectory();
             } else {
                 ftpClient.changeWorkingDirectory(remotePath);
@@ -38,7 +38,7 @@ public class cdCommand extends Command {
         }
         try {
             currentSession.remote_directory = ftpClient.printWorkingDirectory();
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

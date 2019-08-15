@@ -1,13 +1,6 @@
 package com.psuagilegroup;
 
-import org.apache.commons.net.ftp.FTPClient;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Collection;
+import java.io.*;
 
 public class connectInfo {
     String server;
@@ -15,14 +8,17 @@ public class connectInfo {
     String user;
     String pass;
 
-    public connectInfo(){}
-    public connectInfo(String server, int port, String user, String pass){
+    public connectInfo() {
+    }
+
+    public connectInfo(String server, int port, String user, String pass) {
         this.server = server;
         this.port = port;
         this.user = user;
         this.pass = pass;
     }
-    public void saveInfo()throws IOException{
+
+    public void saveInfo() throws IOException {
         BufferedWriter bw = null;
         FileWriter fw = null;
 
@@ -39,24 +35,25 @@ public class connectInfo {
             bw.newLine();
             bw.write(this.pass);
             bw.close();
-        }catch(IOException ex){
+        } catch (IOException ex) {
             throw new IOException("Error to write to the file.");
         }
     }
-    public void saveInfo(String server, int port, String user, String pass){
+
+    public void saveInfo(String server, int port, String user, String pass) {
         this.server = server;
         this.port = port;
         this.user = user;
         this.pass = pass;
         try {
             this.saveInfo();
-        }catch(IOException EX){
+        } catch (IOException EX) {
             //throw new IOException("Error to write to the file.");
             System.out.println(EX);
         }
     }
 
-    public void readInfo(){
+    public void readInfo() {
         BufferedReader br = null;
         FileReader fr = null;
         try {
@@ -68,7 +65,7 @@ public class connectInfo {
             this.user = br.readLine();
             this.pass = br.readLine();
             br.close();
-        }catch(IOException ex) {
+        } catch (IOException ex) {
             System.out.println(ex);
         }
     }
