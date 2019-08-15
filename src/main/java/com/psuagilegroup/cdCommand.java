@@ -11,7 +11,7 @@ public class cdCommand extends Command {
 
     @Override
     public String help() {
-        return "cd\t\t\tChanges the current directory.";
+        return "cd    \t\tChanges the current directory.";
     }
 
     @Override

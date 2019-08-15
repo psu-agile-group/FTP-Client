@@ -17,7 +17,7 @@ public class getCommand extends Command {
 
     @Override
     public String help() {
-        return "get\t\t\tGet multiple file/files from remote server.";
+        return "get   \t\tGet multiple file/files from remote server.";
     }
 
     @Override

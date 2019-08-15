@@ -11,7 +11,7 @@ public class rrmCommand extends Command {
 
     @Override
     public String help() {
-        return "rrm\t\t\tDelete File From Remote Server.";
+        return "rrm   \t\tDelete File From Remote Server.";
     }
 
     @Override

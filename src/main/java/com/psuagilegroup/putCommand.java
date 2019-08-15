@@ -17,7 +17,7 @@ public class putCommand extends Command {
 
     @Override
     public String help() {
-        return "put\t\t\tPut file/files/folder to server (relative path).";
+        return "put   \t\tPut file/files/folder to server (relative path).";
     }
 
     @Override
