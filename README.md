@@ -19,7 +19,7 @@ A FTP (or File Transfer Protocol) client that is used for the transfer of comput
 ## Links
 * [GitHub Page](https://psu-agile-group.github.io/FTP-Client/)
 * [Repository](https://github.com/psu-agile-group)
-* [Backlog](https://github.com/psu-agile-group/psu-agile-group.github.io/blob/master/BACKLOG.md)
+* [Backlog](https://github.com/psu-agile-group/FTP-Client/blob/master/BACKLOG.md)
 
 ## Tech stack, Tools, Prerequisites and Setup
 - [x] Java
@@ -30,8 +30,23 @@ A FTP (or File Transfer Protocol) client that is used for the transfer of comput
 - [x] Travis-CI
 - [x] Circle-CI
 
-#### &nbsp;&nbsp;Build
-&nbsp;&nbsp;[Wiki Page](https://github.com/psu-agile-group/FTP-Client/wiki/Setup)
+## Build and Run
+You can download executables and source code from the [releases](https://github.com/psu-agile-group/FTP-Client/releases) page.
 
-#### &nbsp;&nbsp;Run
-&nbsp;&nbsp;[Wiki Page](https://github.com/psu-agile-group/FTP-Client/wiki/Run)
+### Build with the Source Code
+Please go to our [wiki page](https://github.com/psu-agile-group/FTP-Client/wiki/Setup) for more details.
+
+### Run Linux Released Executables
+unpack the `FTP-Client-Linux.tar.gz`, change your working directory, then run.
+```shell
+$ cd FTP-Client-Linux
+```
+```shell
+$ ./run.sh
+```
+ps: `chmod +x run.sh` or replace `#!/bin/sh` to `#!/bin/bash` in `run.sh` if needed. 
+
+### For Windows Released Executables
+unpack the `FTP-Client-Windows.exe`, open FTP-Client-Windows folder, then launch `run.exe` by double click.
+
+
