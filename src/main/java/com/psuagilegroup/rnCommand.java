@@ -12,7 +12,7 @@ public class rnCommand extends Command {
 
     @Override
     public String help() {
-        return "rn\t\t\tRename file locally.";
+        return "rn    \t\tRename file locally.";
     }
 
     @Override

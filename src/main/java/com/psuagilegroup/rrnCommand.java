@@ -11,7 +11,7 @@ public class rrnCommand extends Command {
 
     @Override
     public String help() {
-        return "rrn\t\t\tRename file on server.";
+        return "rrn   \t\tRename file on server.";
     }
 
     @Override
