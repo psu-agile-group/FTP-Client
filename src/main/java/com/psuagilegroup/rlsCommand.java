@@ -13,7 +13,7 @@ public class rlsCommand extends Command {
 
     @Override
     public String help() {
-        return "rls\t\tDisplays directories and files in the remote directory.";
+        return "rls\t\t\tDisplays directories and files in the remote directory.";
     }
 
     @Override

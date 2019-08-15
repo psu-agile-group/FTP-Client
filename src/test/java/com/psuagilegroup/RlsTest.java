@@ -11,36 +11,36 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.io.*;
-import java.util.List;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RlsTest {
-    private PrintStream sysOut;
-    private ByteArrayOutputStream testOut;
-    private ByteArrayInputStream testIn;
-
     @Mock
     FTPClient fc;
     FTPSession session = new FTPSession();
     FTPFile mockFtpDirectory = new FTPFile();
     FTPFile mockFtpFiles = new FTPFile();
-
     @InjectMocks
     Command command = new rlsCommand(fc);
+    private PrintStream sysOut;
+    private ByteArrayOutputStream testOut;
+    private ByteArrayInputStream testIn;
 
     @Before
-    public void setup() throws IOException{
+    public void setup() throws IOException {
         sysOut = System.out;
         testOut = new ByteArrayOutputStream();
         System.setOut(new PrintStream(testOut));
         mocksetup();
     }
 
-    private void mocksetup(){
+    private void mocksetup() {
         mockFtpDirectory.setName("htdocs");
         mockFtpDirectory.setType(FTPFile.DIRECTORY_TYPE);
         mockFtpDirectory.setRawListing("drwxr-xr-x   11 24139835   24139835         4096 Jul 31 22:49 htdocs");
@@ -51,12 +51,12 @@ public class RlsTest {
     }
 
     @After
-    public void cleanup() throws IOException{
+    public void cleanup() throws IOException {
         System.setOut(sysOut);
     }
 
     @Test
-    public void rlsTestNotFound() throws IOException{
+    public void rlsTestNotFound() throws IOException {
 
         String[] args = new String[]{"rls", "123.html"};
         when(fc.listFiles(any(String.class))).thenReturn(new FTPFile[]{});
@@ -68,7 +68,7 @@ public class RlsTest {
     }
 
     @Test
-    public void rlsTestListFile() throws IOException{
+    public void rlsTestListFile() throws IOException {
 
         String[] args = new String[]{"rls", "index.html"};
         when(fc.listFiles(any(String.class))).thenReturn(new FTPFile[]{mockFtpFiles});
@@ -80,7 +80,7 @@ public class RlsTest {
     }
 
     @Test
-    public void rlsTestListDirectory() throws IOException{
+    public void rlsTestListDirectory() throws IOException {
 
         String[] args = new String[]{"rls", "htdocs"};
         when(fc.listFiles(any(String.class))).thenReturn(new FTPFile[]{mockFtpDirectory});
@@ -92,7 +92,7 @@ public class RlsTest {
     }
 
     @Test
-    public void rlsTestWitNoOption() throws IOException{
+    public void rlsTestWitNoOption() throws IOException {
 
         String[] args = new String[]{"rls"};
         when(fc.listFiles(any(String.class))).thenReturn(new FTPFile[]{mockFtpFiles, mockFtpDirectory});
@@ -100,13 +100,13 @@ public class RlsTest {
         command.run(session, args);
 
         String testStr = testOut.toString().replace("\r", "").replace("\t", "").replace("\n", "");
-        Assert.assertTrue(testOut.toString().contains("index1.html") && testOut.toString().contains("htdocs/") );
+        Assert.assertTrue(testOut.toString().contains("index1.html") && testOut.toString().contains("htdocs/"));
         testStr = testStr.replace("index1.html", "");
-        Assert.assertTrue(testStr.equals("htdocs/") );
+        Assert.assertTrue(testStr.equals("htdocs/"));
     }
 
     @Test
-    public void rlsTestWitLongListingOption() throws IOException{
+    public void rlsTestWitLongListingOption() throws IOException {
 
         String[] args = new String[]{"rls", "-l"};
         when(fc.listFiles(any(String.class))).thenReturn(new FTPFile[]{mockFtpFiles, mockFtpDirectory});
@@ -115,8 +115,8 @@ public class RlsTest {
 
         String testStr = testOut.toString().replace("\r", "").replace("\t", "").replace("\n", "");
         Assert.assertTrue(testOut.toString().contains("drwxr-xr-x   11 24139835   24139835         4096 Jul 31 22:49 htdocs/")
-                && testOut.toString().contains("-rw-r--r--    1 0          2                   0 Jul  3 19:42 index.html") );
+                && testOut.toString().contains("-rw-r--r--    1 0          2                   0 Jul  3 19:42 index.html"));
         testStr = testStr.replace("drwxr-xr-x   11 24139835   24139835         4096 Jul 31 22:49 htdocs/", "");
-        Assert.assertTrue(testStr.equals("-rw-r--r--    1 0          2                   0 Jul  3 19:42 index.html") );
+        Assert.assertTrue(testStr.equals("-rw-r--r--    1 0          2                   0 Jul  3 19:42 index.html"));
     }
 }

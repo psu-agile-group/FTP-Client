@@ -19,17 +19,14 @@ import java.io.PrintStream;
 
 public class RenameLocalTest {
 
-    private PrintStream sysOut;
-    private ByteArrayOutputStream testOut;
-    private ByteArrayInputStream testIn;
-
     @Mock
     FTPClient fc;
     FTPSession session = new FTPSession();
-
     @InjectMocks
     Command command = new rnCommand(fc);
-
+    private PrintStream sysOut;
+    private ByteArrayOutputStream testOut;
+    private ByteArrayInputStream testIn;
 
     @Before
     public void setup() {
@@ -45,7 +42,7 @@ public class RenameLocalTest {
 
     @Test
     public void NOT_ENOUGH_ARGUMENT_FAIL_TEST() {
-        String args[] = new String[]{"rn", "UnitTest/test2.txt"};
+        String[] args = new String[]{"rn", "UnitTest/test2.txt"};
 
         // Run the command
         command.run(session, args);
@@ -55,7 +52,7 @@ public class RenameLocalTest {
     @Test
     public void RENAME_LOCAL_FAILS_TEST() {
         // Setup Mocks
-        String args[] = new String[]{"rn", "UnitTest/nofile.txt", "UnitTest/test2.txt"};
+        String[] args = new String[]{"rn", "UnitTest/nofile.txt", "UnitTest/test2.txt"};
 
         // Run the command
         command.run(session, args);
@@ -66,8 +63,8 @@ public class RenameLocalTest {
     @Test
     public void RENAME_LOCAL_PASS_TEST() throws IOException {
         // Setup Mocks
-        String args1[] = new String[]{"rn", "UnitTest/test4.txt", "UnitTest/test3.txt"};
-        String args2[] = new String[]{"rn", "UnitTest/test3.txt", "UnitTest/test4.txt"};
+        String[] args1 = new String[]{"rn", "UnitTest/test4.txt", "UnitTest/test3.txt"};
+        String[] args2 = new String[]{"rn", "UnitTest/test3.txt", "UnitTest/test4.txt"};
 
         // Run the command
         command.run(session, args1);

@@ -11,7 +11,7 @@ public class lsCommand extends Command {
 
     @Override
     public String help() {
-        return "ls\t\tDisplays directories and files in the current directory.";
+        return "ls\t\t\tDisplays directories and files in the current directory.";
     }
 
     @Override

@@ -5,18 +5,18 @@ import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.IOException;
 
-public class loginCommand extends Command{
-    public loginCommand(FTPClient ftpClient)
-    {
+public class loginCommand extends Command {
+    public loginCommand(FTPClient ftpClient) {
         super(ftpClient);
     }
+
     @Override
-    public String help(){
-        return "login\tLogs into server.";
+    public String help() {
+        return "login\t\tLogs into server.";
     }
+
     @Override
-    public FTPSession run(  FTPSession currentSession, String[] args )
-    {
+    public FTPSession run(FTPSession currentSession, String[] args) {
         connectInfo save = currentSession.save;
 
         try {
@@ -47,11 +47,11 @@ public class loginCommand extends Command{
         return currentSession;
     }
 
-    private FTPSession initSession(FTPSession currentSession ){
+    private FTPSession initSession(FTPSession currentSession) {
         try {
             currentSession.remote_directory = ftpClient.printWorkingDirectory();
             currentSession.local_directory = new java.io.File(".").getCanonicalPath();
-        }catch(java.io.IOException e) {
+        } catch (java.io.IOException e) {
             System.out.println("Oops! Something wrong happened: " + e);
         }
         return currentSession;
